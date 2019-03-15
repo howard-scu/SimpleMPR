@@ -1,0 +1,11 @@
+# ºöÂÔÎÄ¼ş
+SimpleMPR.VC.db
+SimpleMPR.VC.VC.opendb
+/SimpleMPR/SimpleMPR.vcxproj.user
+
+# ºöÂÔÄ¿Â¼
+/.vs/*
+/Debug/*
+/x64/*
+/SimpleMPR/Debug/*
+/SimpleMPR/x64/*

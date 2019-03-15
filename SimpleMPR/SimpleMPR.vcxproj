@@ -1,0 +1,130 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{13ea54d3-cb00-4ce5-852b-dfc0c8426289}</ProjectGuid>
+    <RootNamespace>SimpleMPR</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>E:\mitk\build\ep\include\ITK-4.9;E:\mitk\build\ep\include\vtk-7.0;$(IncludePath)</IncludePath>
+    <LibraryPath>E:\mitk\build\ep\bin;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>E:\mitk\build\ep\include\vtk-7.0;E:\mitk\build\ep\include\ITK-4.9;$(IncludePath)</IncludePath>
+    <LibraryPath>E:\mitk\build\ep\bin;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>E:\mitk\build\ep\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>ann.lib;annd.lib;charls.lib;charlsd.lib;cmr.lib;cmrd.lib;cppunit.lib;cppunitd.lib;dcmdata.lib;dcmdatad.lib;dcmdsig.lib;dcmdsigd.lib;dcmfg.lib;dcmfgd.lib;dcmimage.lib;dcmimaged.lib;dcmimgle.lib;dcmimgled.lib;dcmiod.lib;dcmiodd.lib;dcmjpeg.lib;dcmjpegd.lib;dcmjpls.lib;dcmjplsd.lib;dcmnet.lib;dcmnetd.lib;dcmpstat.lib;dcmpstatd.lib;dcmqrdb.lib;dcmqrdbd.lib;dcmrt.lib;dcmrtd.lib;dcmseg.lib;dcmsegd.lib;dcmsr.lib;dcmsrd.lib;dcmtls.lib;dcmtlsd.lib;dcmwlm.lib;dcmwlmd.lib;gdcmcharls.lib;gdcmcharlsd.lib;gdcmCommon.lib;gdcmCommond.lib;gdcmDICT.lib;gdcmDICTd.lib;gdcmDSED.lib;gdcmDSEDd.lib;gdcmexpat.lib;gdcmexpatd.lib;gdcmgetopt.lib;gdcmgetoptd.lib;gdcmIOD.lib;gdcmIODd.lib;gdcmjpeg12.lib;gdcmjpeg12d.lib;gdcmjpeg16.lib;gdcmjpeg16d.lib;gdcmjpeg8.lib;gdcmjpeg8d.lib;gdcmMEXD.lib;gdcmMEXDd.lib;gdcmMSFF.lib;gdcmMSFFd.lib;gdcmopenjpeg.lib;gdcmopenjpegd.lib;gdcmzlib.lib;gdcmzlibd.lib;glew.lib;glewd.lib;i2d.lib;i2dd.lib;ijg12.lib;ijg12d.lib;ijg16.lib;ijg16d.lib;ijg8.lib;ijg8d.lib;ITKBiasCorrection-4.9d.lib;ITKBioCell-4.9d.lib;ITKCommon-4.9d.lib;ITKDICOMParser-4.9d.lib;itkdouble-conversion-4.9d.lib;ITKEXPAT-4.9d.lib;ITKFEM-4.9d.lib;ITKgiftiio-4.9d.lib;itkhdf5-4.9d.lib;itkhdf5_cpp-4.9d.lib;ITKIOBioRad-4.9d.lib;ITKIOBMP-4.9d.lib;ITKIOCSV-4.9d.lib;ITKIOGDCM-4.9d.lib;ITKIOGE-4.9d.lib;ITKIOGIPL-4.9d.lib;ITKIOHDF5-4.9d.lib;ITKIOImageBase-4.9d.lib;ITKIOIPL-4.9d.lib;ITKIOJPEG-4.9d.lib;ITKIOLSM-4.9d.lib;ITKIOMesh-4.9d.lib;ITKIOMeta-4.9d.lib;ITKIOMRC-4.9d.lib;ITKIONIFTI-4.9d.lib;ITKIONRRD-4.9d.lib;ITKIOPNG-4.9d.lib;ITKIOSiemens-4.9d.lib;ITKIOSpatialObjects-4.9d.lib;ITKIOStimulate-4.9d.lib;ITKIOTIFF-4.9d.lib;ITKIOTransformBase-4.9d.lib;ITKIOTransformHDF5-4.9d.lib;ITKIOTransformInsightLegacy-4.9d.lib;ITKIOTransformMatlab-4.9d.lib;ITKIOVTK-4.9d.lib;ITKIOXML-4.9d.lib;itkjpeg-4.9d.lib;ITKKLMRegionGrowing-4.9d.lib;ITKLabelMap-4.9d.lib;ITKMesh-4.9d.lib;ITKMetaIO-4.9d.lib;itkNetlibSlatec-4.9d.lib;ITKniftiio-4.9d.lib;ITKNrrdIO-4.9d.lib;itkopenjpeg-4.9d.lib;ITKOptimizers-4.9d.lib;ITKOptimizersv4-4.9d.lib;ITKPath-4.9d.lib;itkpng-4.9d.lib;ITKPolynomials-4.9d.lib;ITKQuadEdgeMesh-4.9d.lib;ITKReview-4.9d.lib;ITKSpatialObjects-4.9d.lib;ITKStatistics-4.9d.lib;itksys-4.9d.lib;itktiff-4.9d.lib;ITKTransform-4.9d.lib;itkv3p_lsqr-4.9d.lib;itkv3p_netlib-4.9d.lib;itkvcl-4.9d.lib;ITKVideoCore-4.9d.lib;ITKVideoIO-4.9d.lib;itkvnl-4.9d.lib;ITKVNLInstantiation-4.9d.lib;itkvnl_algo-4.9d.lib;ITKVTK-4.9d.lib;ITKWatersheds-4.9d.lib;itkzlib-4.9d.lib;ITKznz-4.9d.lib;oflog.lib;oflogd.lib;ofstd.lib;ofstdd.lib;PocoFoundation.lib;PocoFoundationd.lib;PocoJSON.lib;PocoJSONd.lib;PocoNet.lib;PocoNetd.lib;PocoUtil.lib;PocoUtild.lib;PocoXML.lib;PocoXMLd.lib;PocoZip.lib;PocoZipd.lib;qwt.lib;qwtd.lib;socketxx.lib;socketxxd.lib;tinyxml.lib;tinyxmld.lib;vtkalglib-7.0d.lib;vtkChartsCore-7.0d.lib;vtkCommonColor-7.0d.lib;vtkCommonComputationalGeometry-7.0d.lib;vtkCommonCore-7.0d.lib;vtkCommonDataModel-7.0d.lib;vtkCommonExecutionModel-7.0d.lib;vtkCommonMath-7.0d.lib;vtkCommonMisc-7.0d.lib;vtkCommonSystem-7.0d.lib;vtkCommonTransforms-7.0d.lib;vtkDICOMParser-7.0d.lib;vtkDomainsChemistry-7.0d.lib;vtkexoIIc-7.0d.lib;vtkexpat-7.0d.lib;vtkFiltersAMR-7.0d.lib;vtkFiltersCore-7.0d.lib;vtkFiltersExtraction-7.0d.lib;vtkFiltersFlowPaths-7.0d.lib;vtkFiltersGeneral-7.0d.lib;vtkFiltersGeneric-7.0d.lib;vtkFiltersGeometry-7.0d.lib;vtkFiltersHybrid-7.0d.lib;vtkFiltersHyperTree-7.0d.lib;vtkFiltersImaging-7.0d.lib;vtkFiltersModeling-7.0d.lib;vtkFiltersParallel-7.0d.lib;vtkFiltersParallelImaging-7.0d.lib;vtkFiltersProgrammable-7.0d.lib;vtkFiltersSelection-7.0d.lib;vtkFiltersSMP-7.0d.lib;vtkFiltersSources-7.0d.lib;vtkFiltersStatistics-7.0d.lib;vtkFiltersTexture-7.0d.lib;vtkFiltersVerdict-7.0d.lib;vtkfreetype-7.0d.lib;vtkGeovisCore-7.0d.lib;vtkgl2ps-7.0d.lib;vtkGUISupportQt-7.0d.lib;vtkGUISupportQtOpenGL-7.0d.lib;vtkGUISupportQtSQL-7.0d.lib;vtkhdf5-7.0d.lib;vtkhdf5_hl-7.0d.lib;vtkImagingColor-7.0d.lib;vtkImagingCore-7.0d.lib;vtkImagingFourier-7.0d.lib;vtkImagingGeneral-7.0d.lib;vtkImagingHybrid-7.0d.lib;vtkImagingMath-7.0d.lib;vtkImagingMorphological-7.0d.lib;vtkImagingSources-7.0d.lib;vtkImagingStatistics-7.0d.lib;vtkImagingStencil-7.0d.lib;vtkInfovisCore-7.0d.lib;vtkInfovisLayout-7.0d.lib;vtkInteractionImage-7.0d.lib;vtkInteractionStyle-7.0d.lib;vtkInteractionWidgets-7.0d.lib;vtkIOAMR-7.0d.lib;vtkIOCore-7.0d.lib;vtkIOEnSight-7.0d.lib;vtkIOExodus-7.0d.lib;vtkIOExport-7.0d.lib;vtkIOGeometry-7.0d.lib;vtkIOImage-7.0d.lib;vtkIOImport-7.0d.lib;vtkIOInfovis-7.0d.lib;vtkIOLegacy-7.0d.lib;vtkIOLSDyna-7.0d.lib;vtkIOMINC-7.0d.lib;vtkIOMovie-7.0d.lib;vtkIONetCDF-7.0d.lib;vtkIOParallel-7.0d.lib;vtkIOParallelXML-7.0d.lib;vtkIOPLY-7.0d.lib;vtkIOSQL-7.0d.lib;vtkIOVideo-7.0d.lib;vtkIOXML-7.0d.lib;vtkIOXMLParser-7.0d.lib;vtkjpeg-7.0d.lib;vtkjsoncpp-7.0d.lib;vtklibxml2-7.0d.lib;vtkmetaio-7.0d.lib;vtkNetCDF-7.0d.lib;vtkNetCDF_cxx-7.0d.lib;vtkoggtheora-7.0d.lib;vtkParallelCore-7.0d.lib;vtkpng-7.0d.lib;vtkproj4-7.0d.lib;vtkRenderingAnnotation-7.0d.lib;vtkRenderingContext2D-7.0d.lib;vtkRenderingContextOpenGL-7.0d.lib;vtkRenderingCore-7.0d.lib;vtkRenderingFreeType-7.0d.lib;vtkRenderingGL2PS-7.0d.lib;vtkRenderingImage-7.0d.lib;vtkRenderingLabel-7.0d.lib;vtkRenderingLIC-7.0d.lib;vtkRenderingLOD-7.0d.lib;vtkRenderingOpenGL-7.0d.lib;vtkRenderingQt-7.0d.lib;vtkRenderingVolume-7.0d.lib;vtkRenderingVolumeOpenGL-7.0d.lib;vtksqlite-7.0d.lib;vtksys-7.0d.lib;vtkTestingRendering-7.0d.lib;vtktiff-7.0d.lib;vtkverdict-7.0d.lib;vtkViewsContext2D-7.0d.lib;vtkViewsCore-7.0d.lib;vtkViewsInfovis-7.0d.lib;vtkViewsQt-7.0d.lib;vtkzlib-7.0d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>Console</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
