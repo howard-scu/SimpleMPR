@@ -19,7 +19,18 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="lwImageReader.cpp" />
+    <ClCompile Include="lwImageViewer2D.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="vtkImageInteractionCallback.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="itkImageToVTKImageFilter.h" />
+    <ClInclude Include="itkImageToVTKImageFilter.hxx" />
+    <ClInclude Include="lwDef.h" />
+    <ClInclude Include="lwImageReader.h" />
+    <ClInclude Include="lwImageViewer2D.h" />
+    <ClInclude Include="vtkImageInteractionCallback.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{13ea54d3-cb00-4ce5-852b-dfc0c8426289}</ProjectGuid>
@@ -76,7 +87,7 @@
     <LibraryPath>E:\mitk\build\ep\bin;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>E:\mitk\build\ep\include\vtk-7.0;E:\mitk\build\ep\include\ITK-4.9;$(IncludePath)</IncludePath>
+    <IncludePath>E:\mitk\build\ep\include\vtk-7.0;E:\mitk\build\ep\include\ITK-4.9;E:\mitk\build\ep\include\gdcm-2.6;$(IncludePath)</IncludePath>
     <LibraryPath>E:\mitk\build\ep\bin;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -91,6 +102,8 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalOptions>-D_SCL_SECURE_NO_WARNINGS %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>E:\mitk\build\ep\lib</AdditionalLibraryDirectories>

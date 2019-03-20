@@ -18,5 +18,34 @@
     <ClCompile Include="main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="lwImageReader.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="lwImageViewer2D.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="vtkImageInteractionCallback.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="itkImageToVTKImageFilter.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lwDef.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lwImageReader.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lwImageViewer2D.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="itkImageToVTKImageFilter.hxx">
+      <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="vtkImageInteractionCallback.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
