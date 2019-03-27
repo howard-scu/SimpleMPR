@@ -175,11 +175,15 @@ private:
 	{
 		vtkRenderWindowInteractor *interactor = this->GetInteractor();
 
-		double  wpts[2];
+		double  wpts[3];
 		prop_picker_->Pick(interactor->GetEventPosition()[0],
 			interactor->GetEventPosition()[1],
 			0.0, Renderer);
 		prop_picker_->GetPickPosition(wpts);
+
+		cout << "<< wpts : " << wpts[0] << ","
+			<< wpts[1] << ","
+			<< wpts[2] << endl;
 
 		double  pts[3];
 		double* current_pts;
