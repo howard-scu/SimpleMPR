@@ -19,18 +19,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="lwImageReader.cpp" />
-    <ClCompile Include="lwImageViewer2D.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="vtkImageInteractionCallback.cpp" />
+    <ClCompile Include="lwMPRLogic.cpp" />
+    <ClCompile Include="lwMPRLogic_test.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="itkImageToVTKImageFilter.h" />
-    <ClInclude Include="itkImageToVTKImageFilter.hxx" />
-    <ClInclude Include="lwDef.h" />
-    <ClInclude Include="lwImageReader.h" />
-    <ClInclude Include="lwImageViewer2D.h" />
-    <ClInclude Include="vtkImageInteractionCallback.h" />
+    <ClInclude Include="lwMPRLogic.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{13ea54d3-cb00-4ce5-852b-dfc0c8426289}</ProjectGuid>
@@ -83,11 +76,11 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>E:\mitk\build\ep\include\ITK-4.9;E:\mitk\build\ep\include\vtk-7.0;$(IncludePath)</IncludePath>
+    <IncludePath>E:\mitk\build\ep\include\ITK-4.9;E:\mitk\build\ep\include\vtk-7.0;E:\Projects\SimpleMPR\SimpleMPR\include;$(IncludePath)</IncludePath>
     <LibraryPath>E:\mitk\build\ep\bin;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>E:\mitk\build\ep\include\vtk-7.0;E:\mitk\build\ep\include\ITK-4.9;E:\mitk\build\ep\include\gdcm-2.6;$(IncludePath)</IncludePath>
+    <IncludePath>E:\mitk\build\ep\include\vtk-7.0;E:\mitk\build\ep\include\ITK-4.9;E:\mitk\build\ep\include\gdcm-2.6;E:\Projects\SimpleMPR\SimpleMPR\include;$(IncludePath)</IncludePath>
     <LibraryPath>E:\mitk\build\ep\bin;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

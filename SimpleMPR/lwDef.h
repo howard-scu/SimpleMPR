@@ -24,18 +24,18 @@ enum INTERACTION_TYPE
 
 const double AxialElements[16] =
 {
-		 1, 0, 0, 0,
-		 0, 1, 0, 0,
-		 0, 0, 1, 0,
-		 0, 0, 0, 1
+	1, 0, 0, 0,
+	0, 1, 0, 0,
+	0, 0, 1, 0,
+	0, 0, 0, 1
 };
 
 const double CoronalElements[16] =
 {
-		 1, 0, 0, 0,
-		 0, 0, 1, 0,
-		 0, 1, 0, 0,
-		 0, 0, 0, 1
+	1, 0, 0, 0,
+	0, 0, 1, 0,
+	0, 1, 0, 0,
+	0, 0, 0, 1
 };
 
 const double SagittalElements[16] =

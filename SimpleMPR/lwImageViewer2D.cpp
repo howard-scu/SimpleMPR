@@ -77,9 +77,13 @@ void lwImageViewer2D::SetInputImage(vtkSmartPointer<vtkImageData> input)
 	_image->GetSpacing(spacing);
 	_image->GetOrigin(origin);
 
-	_center[0] = origin[0] + spacing[0] * 0.5 * (extent[0] + extent[1]);
-	_center[1] = origin[1] + spacing[1] * 0.5 * (extent[2] + extent[3]);
-	_center[2] = origin[2] + spacing[2] * 0.5 * (extent[4] + extent[5]);
+	//_center[0] = origin[0] + spacing[0] * 0.5 * (extent[0] + extent[1]);
+	//_center[1] = origin[1] + spacing[1] * 0.5 * (extent[2] + extent[3]);
+	//_center[2] = origin[2] + spacing[2] * 0.5 * (extent[4] + extent[5]);
+	for (size_t i = 0; i < 3; i++)
+	{
+		_center[i] = 0;
+	}
 
 	_reslice->SetInputData(_image);
 }
