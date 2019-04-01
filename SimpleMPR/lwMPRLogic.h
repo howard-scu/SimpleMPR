@@ -7,8 +7,8 @@
 #include <list>
 
 #include <vtkSmartPointer.h>
-#include <vtkImageReslice.h>
-#include <vtkImageData.h>
+//#include <vtkImageReslice.h>
+//#include <vtkImageData.h>
 #include <vtkMatrix4x4.h>
 
 using namespace std;
@@ -30,6 +30,7 @@ public:
 
 	/* 设置方向 */
 	void SetView(MPR_TYPE type);
+	MPR_TYPE GetView();
 
 	/* 设置同步窗口 */
 	void SyncView(lwMPRLogic* viewer);
@@ -45,16 +46,17 @@ public:
 	vector<double> GetZAxis();
 	vector<double> GetCenter();
 
-	void Render();
+	virtual void Render() = 0;
 
-private:
+protected:
 	vtkSmartPointer<vtkMatrix4x4>			view_matrix;
 	vtkSmartPointer<vtkMatrix4x4>			axis_matrix;
-	vtkSmartPointer<vtkMatrix4x4>			trans_matrix;
-	vector<double>							oblique_axis;
-	lwMPRLogic*						next_viewer;
+	MPR_TYPE								view_type;
 
-	MPR_TYPE								view;
+private:
+	//vector<double>							oblique_axis;
+	lwMPRLogic*								next_viewer;
+
 	const double AXIAL_VIEW[16] = { 1, 0, 0, 0,0, 1, 0, 0,0, 0, 1, 0,0, 0, 0, 1 };
 	const double CORONAL_VIEW[16] = { 1, 0, 0, 0,0, 0, 1, 0,0, 1, 0, 0,0, 0, 0, 1 };
 	const double SAGITTAL_VIEW[16] = { 0, 0, 1, 0,1, 0, 0, 0,0, 1, 0, 0,0, 0, 0, 1 };

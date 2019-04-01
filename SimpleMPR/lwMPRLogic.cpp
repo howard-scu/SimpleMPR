@@ -6,7 +6,7 @@ lwMPRLogic::lwMPRLogic()
 {
 	view_matrix = vtkSmartPointer<vtkMatrix4x4>::New();
 	axis_matrix = vtkSmartPointer<vtkMatrix4x4>::New();
-	trans_matrix = vtkSmartPointer<vtkMatrix4x4>::New();
+	//trans_matrix = vtkSmartPointer<vtkMatrix4x4>::New();
 	view_matrix->DeepCopy(AXIAL_VIEW);
 	axis_matrix->DeepCopy(AXIAL_VIEW);
 	next_viewer = nullptr;
@@ -19,6 +19,7 @@ lwMPRLogic::~lwMPRLogic()
 
 void lwMPRLogic::SetView(MPR_TYPE type)
 {
+	view_type = type;
 	switch (type)
 	{
 	case AXIAL:
@@ -36,10 +37,18 @@ void lwMPRLogic::SetView(MPR_TYPE type)
 	}
 }
 
+lwMPRLogic::MPR_TYPE 
+lwMPRLogic::GetView()
+{
+	return view_type;
+}
+
 void lwMPRLogic::SyncView(lwMPRLogic* viewer)
 {
 	next_viewer = viewer;
 }
+
+//#include<windows.h>
 
 void lwMPRLogic::OnAxisMatrixChanged(vtkSmartPointer<vtkMatrix4x4> matrix)
 {
@@ -47,6 +56,7 @@ void lwMPRLogic::OnAxisMatrixChanged(vtkSmartPointer<vtkMatrix4x4> matrix)
 	do
 	{
 		p->axis_matrix->DeepCopy(matrix);
+		p->Render();
 		p = p->next_viewer;
 	} while (p&&p != this);
 }
@@ -127,7 +137,7 @@ vector<double> lwMPRLogic::GetCenter()
 	return vec;
 }
 
-void lwMPRLogic::Render()
-{
-	vtkMatrix4x4::Multiply4x4(axis_matrix, view_matrix, trans_matrix);
-}
+//void lwMPRLogic::Render()
+//{
+//	vtkMatrix4x4::Multiply4x4(axis_matrix, view_matrix, trans_matrix);
+//}

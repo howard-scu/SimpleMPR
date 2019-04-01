@@ -19,10 +19,15 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="lwMPRImageInteractionCallback.cpp" />
+    <ClCompile Include="lwMPRImageViewer.cpp" />
+    <ClCompile Include="lwMPRImageViewer_test.cpp" />
     <ClCompile Include="lwMPRLogic.cpp" />
     <ClCompile Include="lwMPRLogic_test.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="lwMPRImageInteractionCallback.h" />
+    <ClInclude Include="lwMPRImageViewer.h" />
     <ClInclude Include="lwMPRLogic.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

@@ -21,9 +21,24 @@
     <ClCompile Include="lwMPRLogic_test.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="lwMPRImageViewer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="lwMPRImageViewer_test.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="lwMPRImageInteractionCallback.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="lwMPRLogic.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lwMPRImageViewer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lwMPRImageInteractionCallback.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
