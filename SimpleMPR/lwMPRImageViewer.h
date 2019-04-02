@@ -19,8 +19,9 @@
 #include <vtkLineSource.h>
 #include <vtkCornerAnnotation.h>
 #include <vtkPolyDataMapper.h>
-#include "lwMPRImageInteractionCallback.h"
 #include <vtkInteractorStyleUser.h>
+#include "lwMPRImageInteractionCallback.h"
+
 class lwMPRImageViewer :
 	public lwMPRLogic
 {
@@ -29,6 +30,7 @@ public:
 	~lwMPRImageViewer();
 	void SetInput(vtkSmartPointer<vtkImageData> input);
 	vtkSmartPointer<vtkImageData> GetInput();
+	vtkSmartPointer<vtkImageActor> GetImageActor();
 	void Render();
 private:
 	vtkSmartPointer<vtkImageData>			image;
@@ -40,7 +42,7 @@ private:
 	vtkSmartPointer<vtkRenderer>			renderer;
 	vtkSmartPointer<vtkRenderWindow>		window;
 	vtkSmartPointer<vtkRenderWindowInteractor>			interactor;
-	vtkSmartPointer<vtkInteractorStyleUser>	imageStyle;
+	vtkSmartPointer<vtkInteractorStyleImage>			imageStyle;
 	vtkSmartPointer<lwMPRImageInteractionCallback>		callback;
 	bool	render_flag{ false };
 };

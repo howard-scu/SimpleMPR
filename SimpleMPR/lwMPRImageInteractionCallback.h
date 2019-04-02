@@ -28,7 +28,10 @@ private:
 	vtkSmartPointer<vtkRenderer>	renderer;
 	lwMPRImageViewer*				viewer;
 	bool							lp{false};
-	double							spacing[3];
+	int		extent[6];
+	double	spacing[3];
+	double	origin[3];
+	double	center[3];
 };
 
 #endif // !_LW_MPR_IMAGE_INTERACTION_CALLBACK_H

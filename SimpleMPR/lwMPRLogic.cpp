@@ -6,7 +6,6 @@ lwMPRLogic::lwMPRLogic()
 {
 	view_matrix = vtkSmartPointer<vtkMatrix4x4>::New();
 	axis_matrix = vtkSmartPointer<vtkMatrix4x4>::New();
-	//trans_matrix = vtkSmartPointer<vtkMatrix4x4>::New();
 	view_matrix->DeepCopy(AXIAL_VIEW);
 	axis_matrix->DeepCopy(AXIAL_VIEW);
 	next_viewer = nullptr;
@@ -47,8 +46,6 @@ void lwMPRLogic::SyncView(lwMPRLogic* viewer)
 {
 	next_viewer = viewer;
 }
-
-//#include<windows.h>
 
 void lwMPRLogic::OnAxisMatrixChanged(vtkSmartPointer<vtkMatrix4x4> matrix)
 {
@@ -97,6 +94,14 @@ void lwMPRLogic::UpdateCenter(vector<double>& vec)
 	OnAxisMatrixChanged(axis_matrix);
 }
 
+void lwMPRLogic::SetCenter(vector<double>& vec)
+{
+	for (int i = 0; i < 3; i++)
+	{
+		axis_matrix->SetElement(i, 3, vec[i]);
+	}
+}
+
 vector<double> lwMPRLogic::GetXAxis()
 {
 	vector<double> vec;
@@ -137,7 +142,3 @@ vector<double> lwMPRLogic::GetCenter()
 	return vec;
 }
 
-//void lwMPRLogic::Render()
-//{
-//	vtkMatrix4x4::Multiply4x4(axis_matrix, view_matrix, trans_matrix);
-//}

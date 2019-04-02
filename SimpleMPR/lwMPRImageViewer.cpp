@@ -14,7 +14,7 @@ lwMPRImageViewer::lwMPRImageViewer()
 	renderer = vtkSmartPointer<vtkRenderer>::New();
 	window = vtkSmartPointer<vtkRenderWindow>::New();
 	interactor = vtkSmartPointer<vtkRenderWindowInteractor>::New();
-	imageStyle = vtkSmartPointer<vtkInteractorStyleUser>::New();
+	imageStyle = vtkSmartPointer<vtkInteractorStyleImage>::New();
 	callback = vtkSmartPointer<lwMPRImageInteractionCallback>::New();
 
 	reslice->SetInputData(image);
@@ -39,11 +39,12 @@ lwMPRImageViewer::lwMPRImageViewer()
 
 	callback->SetRenderer(renderer);
 	callback->SetViewer(this);
-	interactor->AddObserver(vtkCommand::LeftButtonPressEvent, callback);
-	interactor->AddObserver(vtkCommand::LeftButtonReleaseEvent, callback);
-	interactor->AddObserver(vtkCommand::MouseWheelBackwardEvent, callback);
-	interactor->AddObserver(vtkCommand::MouseWheelForwardEvent, callback);
-	interactor->AddObserver(vtkCommand::MouseMoveEvent, callback);
+	
+	imageStyle->AddObserver(vtkCommand::LeftButtonPressEvent, callback);
+	imageStyle->AddObserver(vtkCommand::LeftButtonReleaseEvent, callback);
+	imageStyle->AddObserver(vtkCommand::MouseWheelBackwardEvent, callback);
+	imageStyle->AddObserver(vtkCommand::MouseWheelForwardEvent, callback);
+	imageStyle->AddObserver(vtkCommand::MouseMoveEvent, callback);
 }
 
 
@@ -56,11 +57,30 @@ void lwMPRImageViewer::SetInput(vtkSmartPointer<vtkImageData> input)
 {
 	image = input;
 	reslice->SetInputData(input);
+
+	int		extent[6];
+	double	spacing[3];
+	double	origin[3];
+	double	center[3];
+
+	input->GetExtent(extent);
+	input->GetSpacing(spacing);
+	input->GetOrigin(origin);
+
+	center[0] = origin[0] + spacing[0] * 0.5 * (extent[0] + extent[1]);
+	center[1] = origin[1] + spacing[1] * 0.5 * (extent[2] + extent[3]);
+	center[2] = origin[2] + spacing[2] * 0.5 * (extent[4] + extent[5]);
+	this->SetCenter(vector<double>{center[0], center[1], center[2]});
 }
 
 vtkSmartPointer<vtkImageData> lwMPRImageViewer::GetInput()
 {
 	return image;
+}
+
+vtkSmartPointer<vtkImageActor> lwMPRImageViewer::GetImageActor()
+{
+	return actor;
 }
 
 #include <vtkMetaImageWriter.h>
@@ -84,6 +104,9 @@ string getTime()
 void lwMPRImageViewer::Render()
 {
 	vtkMatrix4x4::Multiply4x4(lwMPRLogic::axis_matrix, lwMPRLogic::view_matrix, resliceAxes);
+	//cout << "======================================" << endl;
+	//resliceAxes->Print(cout);
+	//cout << "======================================" << endl;
 	reslice->SetResliceAxes(resliceAxes);
 	reslice->Modified();
 	//auto writer = vtkSmartPointer<vtkMetaImageWriter>::New();
@@ -91,12 +114,18 @@ void lwMPRImageViewer::Render()
 	//writer->SetFileName(getTime().c_str());
 	//writer->Write();
 	renderer->ResetCamera();
+	//renderer->GetActiveCamera()->ParallelProjectionOn();
+	//renderer->GetActiveCamera()->SetParallelScale(30);
+	//if(this->GetView() == AXIAL)
+	//	renderer->GetActiveCamera()->Print(cout);
+
 	window->Render();
 	if (!render_flag && (view_type == SAGITTAL))
 	{
-		renderer->ResetCamera();
+		//renderer->ResetCamera();
+		//renderer->GetActiveCamera()->Print(cout);
 		//renderer->GetActiveCamera()->ParallelProjectionOn();
-		//renderer->GetActiveCamera()->SetParallelScale();
+		//renderer->GetActiveCamera()->SetParallelScale(0.5);
 		window->Render();
 		render_flag = true;
 		interactor->Start();

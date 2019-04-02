@@ -40,6 +40,7 @@ public:
 	void UpdateYAxis(vector<double>& vec);
 	void UpdateZAxis(vector<double>& vec);
 	void UpdateCenter(vector<double>& vec);
+	void SetCenter(vector<double>& vec);
 
 	vector<double> GetXAxis();
 	vector<double> GetYAxis();
