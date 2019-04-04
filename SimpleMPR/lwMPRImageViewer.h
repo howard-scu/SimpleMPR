@@ -29,10 +29,14 @@ public:
 	lwMPRImageViewer();
 	~lwMPRImageViewer();
 	void SetInput(vtkSmartPointer<vtkImageData> input);
-	vtkSmartPointer<vtkImageData> GetInput();
-	vtkSmartPointer<vtkImageActor> GetImageActor();
+	vtkSmartPointer<vtkImageData>	GetInput();
+	vtkSmartPointer<vtkImageActor>	GetImageActor();
 	void Render();
+
 private:
+	void InitCursor();
+	void UpdateCursor();
+
 	vtkSmartPointer<vtkImageData>			image;
 	vtkSmartPointer<vtkMatrix4x4>			resliceAxes;
 	vtkSmartPointer<vtkImageReslice>		reslice;
@@ -41,6 +45,14 @@ private:
 	vtkSmartPointer<vtkImageActor>			actor;
 	vtkSmartPointer<vtkRenderer>			renderer;
 	vtkSmartPointer<vtkRenderWindow>		window;
+
+	vtkSmartPointer<vtkActor>						_horizontalline_actor;
+	vtkSmartPointer<vtkActor>						_verticalline_actor;
+	vtkSmartPointer<vtkLineSource>					_horizontalline_source;
+	vtkSmartPointer<vtkLineSource>					_verticalline_source;
+	vtkSmartPointer<vtkPolyDataMapper>				_horizontalline_mappper;
+	vtkSmartPointer<vtkPolyDataMapper>				_verticalline_mappper;
+
 	vtkSmartPointer<vtkRenderWindowInteractor>			interactor;
 	vtkSmartPointer<vtkInteractorStyleImage>			imageStyle;
 	vtkSmartPointer<lwMPRImageInteractionCallback>		callback;

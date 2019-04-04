@@ -23,7 +23,7 @@ TEST_CASE("Test for mpr viewer", "[single-file]")
 	shared_ptr<lwMPRImageViewer> viewer1 = make_shared<lwMPRImageViewer>();
 	shared_ptr<lwMPRImageViewer> viewer2 = make_shared<lwMPRImageViewer>();
 	shared_ptr<lwMPRImageViewer> viewer3 = make_shared<lwMPRImageViewer>();
-	
+
 	viewer1->SetView(lwMPRLogic::AXIAL);
 	viewer2->SetView(lwMPRLogic::CORONAL);
 	viewer3->SetView(lwMPRLogic::SAGITTAL);
@@ -31,11 +31,11 @@ TEST_CASE("Test for mpr viewer", "[single-file]")
 	viewer1->SyncView(viewer2.get());
 	viewer2->SyncView(viewer3.get());
 	viewer3->SyncView(viewer1.get());
-	
+
 	viewer1->SetInput(reader->GetOutput());
 	viewer2->SetInput(reader->GetOutput());
 	viewer3->SetInput(reader->GetOutput());
-	
+
 	viewer1->Render();
 	viewer2->Render();
 	viewer3->Render();

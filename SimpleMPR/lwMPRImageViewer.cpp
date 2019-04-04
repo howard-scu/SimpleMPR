@@ -2,6 +2,7 @@
 
 #include <vtkImageMapper3D.h>
 #include <vtkCamera.h>
+#include <vtkProperty.h>
 
 lwMPRImageViewer::lwMPRImageViewer()
 {
@@ -22,7 +23,7 @@ lwMPRImageViewer::lwMPRImageViewer()
 	reslice->SetResliceAxes(resliceAxes);
 	reslice->SetInterpolationModeToLinear();
 
-	table->SetRange(-400, 1300);				// image intensity range
+	table->SetRange(0, 1300);					// image intensity range
 	table->SetValueRange(0.0, 1.0);				// from black to white
 	table->SetSaturationRange(0.0, 0.0);		// no color saturation
 	table->SetRampToLinear();
@@ -39,12 +40,13 @@ lwMPRImageViewer::lwMPRImageViewer()
 
 	callback->SetRenderer(renderer);
 	callback->SetViewer(this);
-	
 	imageStyle->AddObserver(vtkCommand::LeftButtonPressEvent, callback);
 	imageStyle->AddObserver(vtkCommand::LeftButtonReleaseEvent, callback);
 	imageStyle->AddObserver(vtkCommand::MouseWheelBackwardEvent, callback);
 	imageStyle->AddObserver(vtkCommand::MouseWheelForwardEvent, callback);
 	imageStyle->AddObserver(vtkCommand::MouseMoveEvent, callback);
+
+	InitCursor();
 }
 
 
@@ -53,24 +55,19 @@ lwMPRImageViewer::~lwMPRImageViewer()
 
 }
 
+#include <vtkImageChangeInformation.h>
+
 void lwMPRImageViewer::SetInput(vtkSmartPointer<vtkImageData> input)
 {
-	image = input;
-	reslice->SetInputData(input);
+	vtkSmartPointer<vtkImageChangeInformation> change =
+		vtkSmartPointer<vtkImageChangeInformation>::New();
+	change->SetInputData(input);
+	change->CenterImageOn();
+	change->Update();
 
-	int		extent[6];
-	double	spacing[3];
-	double	origin[3];
-	double	center[3];
-
-	input->GetExtent(extent);
-	input->GetSpacing(spacing);
-	input->GetOrigin(origin);
-
-	center[0] = origin[0] + spacing[0] * 0.5 * (extent[0] + extent[1]);
-	center[1] = origin[1] + spacing[1] * 0.5 * (extent[2] + extent[3]);
-	center[2] = origin[2] + spacing[2] * 0.5 * (extent[4] + extent[5]);
-	this->SetCenter(vector<double>{center[0], center[1], center[2]});
+	image = change->GetOutput();
+	reslice->SetInputData(image);
+	callback->SetInput(image);
 }
 
 vtkSmartPointer<vtkImageData> lwMPRImageViewer::GetInput()
@@ -104,32 +101,106 @@ string getTime()
 void lwMPRImageViewer::Render()
 {
 	vtkMatrix4x4::Multiply4x4(lwMPRLogic::axis_matrix, lwMPRLogic::view_matrix, resliceAxes);
-	//cout << "======================================" << endl;
-	//resliceAxes->Print(cout);
-	//cout << "======================================" << endl;
 	reslice->SetResliceAxes(resliceAxes);
 	reslice->Modified();
+	UpdateCursor();
+	//renderer->ResetCamera();
+
 	//auto writer = vtkSmartPointer<vtkMetaImageWriter>::New();
 	//writer->SetInputConnection(reslice->GetOutputPort());
 	//writer->SetFileName(getTime().c_str());
 	//writer->Write();
-	renderer->ResetCamera();
-	//renderer->GetActiveCamera()->ParallelProjectionOn();
-	//renderer->GetActiveCamera()->SetParallelScale(30);
-	//if(this->GetView() == AXIAL)
-	//	renderer->GetActiveCamera()->Print(cout);
-
 	window->Render();
-	if (!render_flag && (view_type == SAGITTAL))
+
+	if (!render_flag)
 	{
-		//renderer->ResetCamera();
-		//renderer->GetActiveCamera()->Print(cout);
 		//renderer->GetActiveCamera()->ParallelProjectionOn();
-		//renderer->GetActiveCamera()->SetParallelScale(0.5);
-		window->Render();
+		//renderer->GetActiveCamera()->SetParallelScale(60);
 		render_flag = true;
-		interactor->Start();
+		window->Render();
+
+		if (view_type == SAGITTAL)
+			interactor->Start();
 	}
+}
+
+
+void lwMPRImageViewer::InitCursor()
+{
+	_horizontalline_actor = vtkSmartPointer<vtkActor>::New();
+	_verticalline_actor = vtkSmartPointer<vtkActor>::New();
+	_horizontalline_source = vtkSmartPointer<vtkLineSource>::New();
+	_verticalline_source = vtkSmartPointer<vtkLineSource>::New();
+	_horizontalline_mappper = vtkSmartPointer<vtkPolyDataMapper>::New();
+	_verticalline_mappper = vtkSmartPointer<vtkPolyDataMapper>::New();
+
+	_horizontalline_mappper->SetInputConnection(_horizontalline_source->GetOutputPort());
+	_horizontalline_actor->SetMapper(_horizontalline_mappper);
+	_horizontalline_actor->GetProperty()->SetColor(1.0, 0.0, 0.0);
+
+	_verticalline_mappper->SetInputConnection(_verticalline_source->GetOutputPort());
+	_verticalline_actor->SetMapper(_verticalline_mappper);
+	_verticalline_actor->GetProperty()->SetColor(1.0, 0.0, 0.0);
+
+	renderer->AddActor(_horizontalline_actor);
+	renderer->AddActor(_verticalline_actor);
+}
+
+void lwMPRImageViewer::UpdateCursor()
+{
+	double x = 0;
+	double y = 0;
+	double max_x = 0;
+	double max_y = 0;
+	double min_x = 0;
+	double min_y = 0;
+
+	double* spacing = image->GetSpacing();
+	double* origin = image->GetOrigin();
+	double* imBounds = image->GetBounds();
+
+	switch (view_type)
+	{
+	case SAGITTAL:
+	{
+		auto pos = GetPosition();
+		x = pos[1];
+		y = pos[2];
+		min_x = imBounds[2];
+		max_x = imBounds[3];
+		min_y = imBounds[4];
+		max_y = imBounds[5];
+		break;
+	}
+	case CORONAL:
+	{
+		auto pos = GetPosition();
+		x = pos[0];
+		y = pos[2];
+		min_x = imBounds[0];
+		max_x = imBounds[1];
+		min_y = imBounds[4];
+		max_y = imBounds[5];
+		break;
+	}
+	case AXIAL:
+	{
+		auto pos = GetPosition();
+		x = pos[0];
+		y = pos[1];
+		min_x = imBounds[0];
+		max_x = imBounds[1];
+		min_y = imBounds[2];
+		max_y = imBounds[3];
+		break;
+	}
+	}
+	_horizontalline_source->SetPoint1(min_x, y, 0.001);
+	_horizontalline_source->SetPoint2(max_x, y, 0.001);
+	_verticalline_source->SetPoint1(x, min_y, 0.001);
+	_verticalline_source->SetPoint2(x, max_y, 0.001);
+	_horizontalline_source->Modified();
+	_verticalline_source->Modified();
 }
 
 

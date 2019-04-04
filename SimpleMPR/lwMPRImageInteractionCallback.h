@@ -5,6 +5,7 @@
 #include <vtkCommand.h>
 #include <vtkRenderWindowInteractor.h>
 #include <vtkPropPicker.h>
+#include <vtkImageData.h>
 #include <vtkObjectFactory.h>
 #include <vtkRenderer.h>
 
@@ -18,6 +19,7 @@ public:
 	void Execute(vtkObject* caller, unsigned long eventId, void* callData);
 	void SetRenderer(vtkSmartPointer<vtkRenderer> ren);
 	void SetViewer(lwMPRImageViewer* view);
+	void SetInput(vtkSmartPointer<vtkImageData> input);
 
 protected:
 	lwMPRImageInteractionCallback();
@@ -26,12 +28,9 @@ protected:
 private:
 	vtkSmartPointer<vtkPropPicker>	picker;
 	vtkSmartPointer<vtkRenderer>	renderer;
+	vtkSmartPointer<vtkImageData>	image;
 	lwMPRImageViewer*				viewer;
-	bool							lp{false};
-	int		extent[6];
-	double	spacing[3];
-	double	origin[3];
-	double	center[3];
+	bool							lp{ false };
 };
 
 #endif // !_LW_MPR_IMAGE_INTERACTION_CALLBACK_H

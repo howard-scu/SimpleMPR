@@ -36,8 +36,7 @@ void lwMPRLogic::SetView(MPR_TYPE type)
 	}
 }
 
-lwMPRLogic::MPR_TYPE 
-lwMPRLogic::GetView()
+lwMPRLogic::MPR_TYPE lwMPRLogic::GetView()
 {
 	return view_type;
 }
@@ -47,16 +46,174 @@ void lwMPRLogic::SyncView(lwMPRLogic* viewer)
 	next_viewer = viewer;
 }
 
-void lwMPRLogic::OnAxisMatrixChanged(vtkSmartPointer<vtkMatrix4x4> matrix)
+void lwMPRLogic::OnAxisChanged(vtkSmartPointer<vtkMatrix4x4> matrix)
 {
-	auto p = this;
+	auto ptr = this;
 	do
 	{
-		p->axis_matrix->DeepCopy(matrix);
-		p->Render();
-		p = p->next_viewer;
-	} while (p&&p != this);
+		for (int i = 0; i < 3; i++)
+		{
+			for (int j = 0; j < 3; j++)
+			{
+				ptr->axis_matrix->SetElement(i, j, matrix->GetElement(i, j));
+			}
+		}
+		ptr->Render();
+		ptr = ptr->next_viewer;
+	} while (ptr&&ptr != this);
 }
+
+vector<double> lwMPRLogic::GetPosition()
+{
+	return position;
+}
+
+void lwMPRLogic::OnPositionChanged(vector<double>& vec)
+{
+	auto ptr = this;
+	do
+	{
+		switch (ptr->view_type)
+		{
+		case AXIAL:
+			ptr->axis_matrix->SetElement(2, 3, vec[2]);
+			break;
+		case CORONAL:
+			ptr->axis_matrix->SetElement(1, 3, vec[1]);
+			break;
+		case SAGITTAL:
+			ptr->axis_matrix->SetElement(0, 3, vec[0]);
+			break;
+		}
+		for (int i = 0; i < 3; i++)
+		{
+			ptr->position[i] = vec[i];
+		}
+		ptr->Render();
+		ptr = ptr->next_viewer;
+	} while (ptr&&ptr != this);
+}
+
+
+
+//vector<double> lwMPRLogic::GetPosition()
+//{
+//	return position;
+//}
+//
+////void lwMPRLogic::UpdatePosition(vector<double>& vec)
+////{
+////	position = vec;
+////}
+//
+//void lwMPRLogic::OnPositionChanged(vector<double>& vec)
+//{
+//	auto ptr = this;
+//	do
+//	{
+//		switch (ptr->view_type)
+//		{
+//		case AXIAL:
+//			ptr->axis_matrix->SetElement(2, 3, vec[2]);
+//			ptr->position[0] = vec[0];
+//			ptr->position[1] = vec[1];
+//			ptr->position[2] = vec[2];
+//			break;
+//		case CORONAL:
+//			ptr->axis_matrix->SetElement(2, 3, vec[1]);
+//			ptr->position[0] = vec[0];
+//			ptr->position[1] = vec[2];
+//			ptr->position[2] = vec[1];
+//			break;
+//		case SAGITTAL:
+//			ptr->axis_matrix->SetElement(2, 3, vec[0]);
+//			ptr->position[0] = vec[1];
+//			ptr->position[1] = vec[2];
+//			ptr->position[2] = vec[0];
+//			break;
+//		}
+//
+//		ptr->Render();
+//		ptr = ptr->next_viewer;
+//	} while (ptr&&ptr != this);
+//}
+
+//void lwMPRLogic::UpdateZSlice(vector<double>& vec)
+//{
+//	auto ptr = this;
+//	do
+//	{
+//		if (ptr->view_type == this->view_type)
+//			ptr->OnZSliceChanged(vec);
+//		else
+//			ptr->OnXYPosChanged(vec);
+//		ptr->Render();
+//		ptr = ptr->next_viewer;
+//	} while (ptr&&ptr != this);
+//}
+//
+//void lwMPRLogic::UpdateXYPos(vector<double>& vec)
+//{
+//	auto ptr = this;
+//	do
+//	{
+//		if (ptr->view_type == this->view_type)
+//			ptr->OnXYPosChanged(vec);
+//		else
+//			ptr->OnZSliceChanged(vec);
+//		ptr->Render();
+//		ptr = ptr->next_viewer;
+//	} while (ptr&&ptr != this);
+//}
+//
+//void lwMPRLogic::OnZSliceChanged(vector<double>& pos)
+//{
+//	switch (view_type)
+//	{
+//	case AXIAL:
+//		axis_matrix->SetElement(2, 3, pos[2]);
+//		break;
+//	case CORONAL:
+//		axis_matrix->SetElement(2, 3, pos[1]);
+//		break;
+//	case SAGITTAL:
+//		axis_matrix->SetElement(2, 3, pos[0]);
+//		break;
+//	}
+//}
+//
+//void lwMPRLogic::OnXYPosChanged(vector<double>& pos)
+//{
+//	switch (view_type)
+//	{
+//	case AXIAL:
+//		x_pos = pos[0];
+//		y_pos = pos[1];
+//		break;
+//	case CORONAL:
+//		x_pos = pos[0];
+//		y_pos = pos[2];
+//		break;
+//	case SAGITTAL:
+//		x_pos = pos[1];
+//		y_pos = pos[2];
+//		break;
+//	}
+//}
+
+//vector<double> lwMPRLogic::GetCenter()
+//{
+//	switch (view_type)
+//	{
+//	case AXIAL:
+//		return vector<double>{x_pos, y_pos, axis_matrix->GetElement(2, 3)};
+//	case CORONAL:
+//		return vector<double>{x_pos, axis_matrix->GetElement(2, 3), y_pos};
+//	case SAGITTAL:
+//		return vector<double>{axis_matrix->GetElement(2, 3), x_pos, y_pos};
+//	}
+//	return vector<double>{0,0,0};
+//}
 
 void lwMPRLogic::UpdateXAxis(vector<double>& vec)
 {
@@ -64,7 +221,7 @@ void lwMPRLogic::UpdateXAxis(vector<double>& vec)
 	{
 		axis_matrix->SetElement(i, 0, vec[i]);
 	}
-	OnAxisMatrixChanged(axis_matrix);
+	OnAxisChanged(axis_matrix);
 }
 
 void lwMPRLogic::UpdateYAxis(vector<double>& vec)
@@ -73,7 +230,7 @@ void lwMPRLogic::UpdateYAxis(vector<double>& vec)
 	{
 		axis_matrix->SetElement(i, 1, vec[i]);
 	}
-	OnAxisMatrixChanged(axis_matrix);
+	OnAxisChanged(axis_matrix);
 }
 
 void lwMPRLogic::UpdateZAxis(vector<double>& vec)
@@ -82,24 +239,7 @@ void lwMPRLogic::UpdateZAxis(vector<double>& vec)
 	{
 		axis_matrix->SetElement(i, 2, vec[i]);
 	}
-	OnAxisMatrixChanged(axis_matrix);
-}
-
-void lwMPRLogic::UpdateCenter(vector<double>& vec)
-{
-	for (int i = 0; i < 3; i++)
-	{
-		axis_matrix->SetElement(i, 3, vec[i]);
-	}
-	OnAxisMatrixChanged(axis_matrix);
-}
-
-void lwMPRLogic::SetCenter(vector<double>& vec)
-{
-	for (int i = 0; i < 3; i++)
-	{
-		axis_matrix->SetElement(i, 3, vec[i]);
-	}
+	OnAxisChanged(axis_matrix);
 }
 
 vector<double> lwMPRLogic::GetXAxis()
@@ -128,16 +268,6 @@ vector<double> lwMPRLogic::GetZAxis()
 	for (int i = 0; i < 3; i++)
 	{
 		vec.push_back(axis_matrix->GetElement(i, 2));
-	}
-	return vec;
-}
-
-vector<double> lwMPRLogic::GetCenter()
-{
-	vector<double> vec;
-	for (int i = 0; i < 3; i++)
-	{
-		vec.push_back(axis_matrix->GetElement(i, 3));
 	}
 	return vec;
 }
