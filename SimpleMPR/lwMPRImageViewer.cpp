@@ -40,6 +40,7 @@ lwMPRImageViewer::lwMPRImageViewer()
 
 	callback->SetRenderer(renderer);
 	callback->SetViewer(this);
+
 	imageStyle->AddObserver(vtkCommand::LeftButtonPressEvent, callback);
 	imageStyle->AddObserver(vtkCommand::LeftButtonReleaseEvent, callback);
 	imageStyle->AddObserver(vtkCommand::MouseWheelBackwardEvent, callback);
@@ -144,6 +145,19 @@ void lwMPRImageViewer::InitCursor()
 
 	renderer->AddActor(_horizontalline_actor);
 	renderer->AddActor(_verticalline_actor);
+
+	_horizontalline_picker = vtkSmartPointer<vtkCellPicker>::New();
+	_horizontalline_picker->PickFromListOn();
+	_horizontalline_picker->AddPickList(_horizontalline_actor);
+	_horizontalline_picker->SetTolerance(0.02);
+
+	_verticalline_picker = vtkSmartPointer<vtkCellPicker>::New();
+	_verticalline_picker->PickFromListOn();
+	_verticalline_picker->AddPickList(_verticalline_actor);
+	_verticalline_picker->SetTolerance(0.02);
+
+	callback->SetVertPicker(_verticalline_picker);
+	callback->SetHoriPicker(_horizontalline_picker);
 }
 
 void lwMPRImageViewer::UpdateCursor()

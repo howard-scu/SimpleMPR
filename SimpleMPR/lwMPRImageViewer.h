@@ -20,6 +20,8 @@
 #include <vtkCornerAnnotation.h>
 #include <vtkPolyDataMapper.h>
 #include <vtkInteractorStyleUser.h>
+#include <vtkCellPicker.h>
+
 #include "lwMPRImageInteractionCallback.h"
 
 class lwMPRImageViewer :
@@ -45,6 +47,9 @@ private:
 	vtkSmartPointer<vtkImageActor>			actor;
 	vtkSmartPointer<vtkRenderer>			renderer;
 	vtkSmartPointer<vtkRenderWindow>		window;
+
+	vtkSmartPointer<vtkCellPicker>			_horizontalline_picker;
+	vtkSmartPointer<vtkCellPicker>			_verticalline_picker;
 
 	vtkSmartPointer<vtkActor>						_horizontalline_actor;
 	vtkSmartPointer<vtkActor>						_verticalline_actor;
