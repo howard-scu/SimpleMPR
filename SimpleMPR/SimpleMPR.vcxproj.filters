@@ -30,6 +30,15 @@
     <ClCompile Include="lwMPRImageInteractionCallback.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="lwMPRLogic2.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="lwMPRLogic2_test.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="lwMPRImageViewer2.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="lwMPRLogic.h">
@@ -39,6 +48,12 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="lwMPRImageInteractionCallback.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lwMPRLogic2.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lwMPRImageViewer2.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

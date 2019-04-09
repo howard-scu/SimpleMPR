@@ -21,14 +21,19 @@
   <ItemGroup>
     <ClCompile Include="lwMPRImageInteractionCallback.cpp" />
     <ClCompile Include="lwMPRImageViewer.cpp" />
+    <ClCompile Include="lwMPRImageViewer2.cpp" />
     <ClCompile Include="lwMPRImageViewer_test.cpp" />
     <ClCompile Include="lwMPRLogic.cpp" />
+    <ClCompile Include="lwMPRLogic2.cpp" />
+    <ClCompile Include="lwMPRLogic2_test.cpp" />
     <ClCompile Include="lwMPRLogic_test.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="lwMPRImageInteractionCallback.h" />
     <ClInclude Include="lwMPRImageViewer.h" />
+    <ClInclude Include="lwMPRImageViewer2.h" />
     <ClInclude Include="lwMPRLogic.h" />
+    <ClInclude Include="lwMPRLogic2.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{13ea54d3-cb00-4ce5-852b-dfc0c8426289}</ProjectGuid>
