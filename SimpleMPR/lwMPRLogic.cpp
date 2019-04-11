@@ -1,274 +1,203 @@
 #include "lwMPRLogic.h"
-
-
+#include "lwUtils.h"
 
 lwMPRLogic::lwMPRLogic()
 {
-	view_matrix = vtkSmartPointer<vtkMatrix4x4>::New();
-	axis_matrix = vtkSmartPointer<vtkMatrix4x4>::New();
-	view_matrix->DeepCopy(AXIAL_VIEW);
-	axis_matrix->DeepCopy(AXIAL_VIEW);
-	next_viewer = nullptr;
+	next = nullptr;
 }
-
 
 lwMPRLogic::~lwMPRLogic()
 {
+	next = nullptr;
 }
 
-void lwMPRLogic::SetView(MPR_TYPE type)
+void lwMPRLogic::SyncViewer(lwMPRLogic * viewer)
 {
-	view_type = type;
-	switch (type)
+	next = viewer;
+}
+
+void lwMPRLogic::UpdateSlice(double nslice)
+{
+	switch (this->GetView())
 	{
-	case AXIAL:
-		view_matrix->DeepCopy(AXIAL_VIEW);
+	case lwMPRBase::AXIAL:
+		this->SetZPos(nslice);
 		break;
-	case CORONAL:
-		view_matrix->DeepCopy(CORONAL_VIEW);
+	case lwMPRBase::CORONAL:
+		this->SetYPos(nslice);
 		break;
-	case SAGITTAL:
-		view_matrix->DeepCopy(SAGITTAL_VIEW);
-		break;
-	default:
-		view_matrix->DeepCopy(AXIAL_VIEW);
+	case lwMPRBase::SAGITTAL:
+		this->SetXPos(nslice);
 		break;
 	}
-}
-
-lwMPRLogic::MPR_TYPE lwMPRLogic::GetView()
-{
-	return view_type;
-}
-
-void lwMPRLogic::SyncView(lwMPRLogic* viewer)
-{
-	next_viewer = viewer;
-}
-
-void lwMPRLogic::OnAxisChanged(vtkSmartPointer<vtkMatrix4x4> matrix)
-{
-	auto ptr = this;
-	do
+	if (next)
 	{
-		for (int i = 0; i < 3; i++)
+		if (!slice_connection.connected())
 		{
-			for (int j = 0; j < 3; j++)
-			{
-				ptr->axis_matrix->SetElement(i, j, matrix->GetElement(i, j));
-			}
+			slice_connection = slice_signal.connect(
+				boost::bind(&lwMPRLogic::slice_update_slot, next, _1, _2));
 		}
-		ptr->Render();
-		ptr = ptr->next_viewer;
-	} while (ptr&&ptr != this);
+		slice_signal(this->GetView(), nslice);
+	}
 }
 
-vector<double> lwMPRLogic::GetPosition()
+void lwMPRLogic::UpdatePosition(double x, double y)
 {
-	return position;
-}
-
-void lwMPRLogic::OnPositionChanged(vector<double>& vec)
-{
-	auto ptr = this;
-	do
+	switch (this->GetView())
 	{
-		switch (ptr->view_type)
+	case lwMPRBase::AXIAL:
+		this->SetXPos(x);
+		this->SetYPos(y);
+		break;
+	case lwMPRBase::CORONAL:
+		this->SetXPos(x);
+		this->SetZPos(y);
+		break;
+	case lwMPRBase::SAGITTAL:
+		this->SetYPos(x);
+		this->SetZPos(y);
+		break;
+	}
+	if (next)
+	{
+		if (!position_connection.connected())
 		{
-		case AXIAL:
-			ptr->axis_matrix->SetElement(2, 3, vec[2]);
-			break;
-		case CORONAL:
-			ptr->axis_matrix->SetElement(1, 3, vec[1]);
-			break;
-		case SAGITTAL:
-			ptr->axis_matrix->SetElement(0, 3, vec[0]);
-			break;
+			position_connection = position_signal.connect(
+				boost::bind(&lwMPRLogic::position_update_slot, next, _1, _2, _3));
 		}
-		for (int i = 0; i < 3; i++)
+		position_signal(this->GetView(), x, y);
+	}
+}
+
+void lwMPRLogic::UpdateHoriVector(vector<double>& v)
+{
+	// xyz坐标系如图：
+	//		  y+|
+	//			|
+	//			|
+	//			|__________ x+
+	//		   /
+	//		  /
+	//	   z+/
+	// 1.AXIAL
+	//   - 视图对应XY平面
+	//   - x轴方向确定，则y轴方向由Z^X决定
+	//   - y轴方向确定，则x轴方向由Y^Z决定
+	// 2.CORONAL  
+	//   - 视图对应XZ平面
+	//   - x轴方向确定，则z轴方向由X^Y决定
+	//   - z轴方向确定，则x轴方向由Y^Z决定
+	// 3.SAGITTAL 
+	//	 - 视图对应YZ平面
+	//   - y轴方向确定，则z轴方向由X^Y决定
+	//   - z轴方向确定，则y轴方向由Z^X决定
+	lwUtils::Normalize(v);
+	vector<double> v1;
+	switch (this->GetView())
+	{
+	case lwMPRBase::AXIAL:
+		v1 = lwUtils::CrossProduct(this->GetZAxis(), v);
+		break;
+	case lwMPRBase::CORONAL:
+		v1 = lwUtils::CrossProduct(v, this->GetYAxis());
+		break;
+	case lwMPRBase::SAGITTAL:
+		v1 = lwUtils::CrossProduct(this->GetXAxis(), v);
+		break;
+	}
+	this->SetHoriVector(v);
+	this->SetVertVector(v1);
+
+	if (next)
+	{
+		if (!vector_connection.connected())
 		{
-			ptr->position[i] = vec[i];
+			vector_connection = vector_signal.connect(
+				boost::bind(&lwMPRLogic::vector_update_slot, next, _1, _2, _3));
 		}
-		ptr->Render();
-		ptr = ptr->next_viewer;
-	} while (ptr&&ptr != this);
-}
-
-
-
-//vector<double> lwMPRLogic::GetPosition()
-//{
-//	return position;
-//}
-//
-////void lwMPRLogic::UpdatePosition(vector<double>& vec)
-////{
-////	position = vec;
-////}
-//
-//void lwMPRLogic::OnPositionChanged(vector<double>& vec)
-//{
-//	auto ptr = this;
-//	do
-//	{
-//		switch (ptr->view_type)
-//		{
-//		case AXIAL:
-//			ptr->axis_matrix->SetElement(2, 3, vec[2]);
-//			ptr->position[0] = vec[0];
-//			ptr->position[1] = vec[1];
-//			ptr->position[2] = vec[2];
-//			break;
-//		case CORONAL:
-//			ptr->axis_matrix->SetElement(2, 3, vec[1]);
-//			ptr->position[0] = vec[0];
-//			ptr->position[1] = vec[2];
-//			ptr->position[2] = vec[1];
-//			break;
-//		case SAGITTAL:
-//			ptr->axis_matrix->SetElement(2, 3, vec[0]);
-//			ptr->position[0] = vec[1];
-//			ptr->position[1] = vec[2];
-//			ptr->position[2] = vec[0];
-//			break;
-//		}
-//
-//		ptr->Render();
-//		ptr = ptr->next_viewer;
-//	} while (ptr&&ptr != this);
-//}
-
-//void lwMPRLogic::UpdateZSlice(vector<double>& vec)
-//{
-//	auto ptr = this;
-//	do
-//	{
-//		if (ptr->view_type == this->view_type)
-//			ptr->OnZSliceChanged(vec);
-//		else
-//			ptr->OnXYPosChanged(vec);
-//		ptr->Render();
-//		ptr = ptr->next_viewer;
-//	} while (ptr&&ptr != this);
-//}
-//
-//void lwMPRLogic::UpdateXYPos(vector<double>& vec)
-//{
-//	auto ptr = this;
-//	do
-//	{
-//		if (ptr->view_type == this->view_type)
-//			ptr->OnXYPosChanged(vec);
-//		else
-//			ptr->OnZSliceChanged(vec);
-//		ptr->Render();
-//		ptr = ptr->next_viewer;
-//	} while (ptr&&ptr != this);
-//}
-//
-//void lwMPRLogic::OnZSliceChanged(vector<double>& pos)
-//{
-//	switch (view_type)
-//	{
-//	case AXIAL:
-//		axis_matrix->SetElement(2, 3, pos[2]);
-//		break;
-//	case CORONAL:
-//		axis_matrix->SetElement(2, 3, pos[1]);
-//		break;
-//	case SAGITTAL:
-//		axis_matrix->SetElement(2, 3, pos[0]);
-//		break;
-//	}
-//}
-//
-//void lwMPRLogic::OnXYPosChanged(vector<double>& pos)
-//{
-//	switch (view_type)
-//	{
-//	case AXIAL:
-//		x_pos = pos[0];
-//		y_pos = pos[1];
-//		break;
-//	case CORONAL:
-//		x_pos = pos[0];
-//		y_pos = pos[2];
-//		break;
-//	case SAGITTAL:
-//		x_pos = pos[1];
-//		y_pos = pos[2];
-//		break;
-//	}
-//}
-
-//vector<double> lwMPRLogic::GetCenter()
-//{
-//	switch (view_type)
-//	{
-//	case AXIAL:
-//		return vector<double>{x_pos, y_pos, axis_matrix->GetElement(2, 3)};
-//	case CORONAL:
-//		return vector<double>{x_pos, axis_matrix->GetElement(2, 3), y_pos};
-//	case SAGITTAL:
-//		return vector<double>{axis_matrix->GetElement(2, 3), x_pos, y_pos};
-//	}
-//	return vector<double>{0,0,0};
-//}
-
-void lwMPRLogic::UpdateXAxis(vector<double>& vec)
-{
-	for (int i = 0; i < 3; i++)
-	{
-		axis_matrix->SetElement(i, 0, vec[i]);
+		vector_signal(this->GetView(), v, v1);
 	}
-	OnAxisChanged(axis_matrix);
 }
 
-void lwMPRLogic::UpdateYAxis(vector<double>& vec)
+void lwMPRLogic::UpdateVertVector(vector<double>& v)
 {
-	for (int i = 0; i < 3; i++)
+	lwUtils::Normalize(v);
+	vector<double> v1;
+	switch (this->GetView())
 	{
-		axis_matrix->SetElement(i, 1, vec[i]);
+	case lwMPRBase::AXIAL:
+		v1 = lwUtils::CrossProduct(v, this->GetZAxis());
+		break;
+	case lwMPRBase::CORONAL:
+		v1 = lwUtils::CrossProduct(this->GetYAxis(), v);
+		break;
+	case lwMPRBase::SAGITTAL:
+		v1 = lwUtils::CrossProduct(v, this->GetXAxis());
+		break;
 	}
-	OnAxisChanged(axis_matrix);
+	this->SetHoriVector(v1);
+	this->SetVertVector(v);
+	if (next)
+	{
+		if (!vector_connection.connected())
+		{
+			vector_connection = vector_signal.connect(
+				boost::bind(&lwMPRLogic::vector_update_slot, next, _1, _2, _3));
+		}
+		vector_signal(this->GetView(), v1, v);
+	}
 }
 
-void lwMPRLogic::UpdateZAxis(vector<double>& vec)
+void lwMPRLogic::slice_update_slot(MPR_TYPE view, double nslice)
 {
-	for (int i = 0; i < 3; i++)
+	switch (view)
 	{
-		axis_matrix->SetElement(i, 2, vec[i]);
+	case lwMPRBase::AXIAL:
+		this->SetZPos(nslice);
+		break;
+	case lwMPRBase::CORONAL:
+		this->SetYPos(nslice);
+		break;
+	case lwMPRBase::SAGITTAL:
+		this->SetXPos(nslice);
+		break;
 	}
-	OnAxisChanged(axis_matrix);
 }
 
-vector<double> lwMPRLogic::GetXAxis()
+void lwMPRLogic::position_update_slot(MPR_TYPE view, double x, double y)
 {
-	vector<double> vec;
-	for (int i = 0; i < 3; i++)
+	switch (view)
 	{
-		vec.push_back(axis_matrix->GetElement(i, 0));
+	case lwMPRBase::AXIAL:
+		this->SetXPos(x);
+		this->SetYPos(y);
+		break;
+	case lwMPRBase::CORONAL:
+		this->SetXPos(x);
+		this->SetZPos(y);
+		break;
+	case lwMPRBase::SAGITTAL:
+		this->SetYPos(x);
+		this->SetZPos(y);
+		break;
 	}
-	return vec;
 }
 
-vector<double> lwMPRLogic::GetYAxis()
+void lwMPRLogic::vector_update_slot(MPR_TYPE view, vector<double>& v1, vector<double>& v2)
 {
-	vector<double> vec;
-	for (int i = 0; i < 3; i++)
+	switch (view)
 	{
-		vec.push_back(axis_matrix->GetElement(i, 1));
+	case lwMPRBase::AXIAL:
+		this->SetXAxis(v1);
+		this->SetYAxis(v2);
+		break;
+	case lwMPRBase::CORONAL:
+		this->SetXAxis(v1);
+		this->SetZAxis(v2);
+		break;
+	case lwMPRBase::SAGITTAL:
+		this->SetYAxis(v1);
+		this->SetZAxis(v2);
+		break;
 	}
-	return vec;
 }
-
-vector<double> lwMPRLogic::GetZAxis()
-{
-	vector<double> vec;
-	for (int i = 0; i < 3; i++)
-	{
-		vec.push_back(axis_matrix->GetElement(i, 2));
-	}
-	return vec;
-}
-

@@ -8,6 +8,7 @@
 
 #include <vtkSmartPointer.h>
 #include <vtkMatrix4x4.h>
+#include <boost/signals2.hpp>
 
 using namespace std;
 
@@ -16,7 +17,17 @@ static void normalize(vector<double>& v);
 
 // 向量叉乘操作
 static vector<double> crossProduct(vector<double>& a, vector<double>& b);
-
+//lwMPRLogic2
+//// 主动
+//- SetXYPos(double x,double y)			/// 鼠标拖动中心点
+//- SetZSlice(double z)					/// 鼠标滚轮 
+//- SetVX(double* vx)					/// 鼠标拖动十字线转动
+//- SetVY(double* vy)					/// 鼠标拖动十字线转动
+//
+//// 被动
+//- OnXPosChanged(double x)					/// 横轴坐标响应改变
+//- OnYPosChanged(double y)					/// 纵轴坐标响应改变
+//- OnAxisChanged(double* vx,double vy)		/// 横轴坐标改变
 // 用于实现MPR逻辑
 class lwMPRLogic2
 {
@@ -50,30 +61,37 @@ public:
 	vector<double>	GetXAxis();
 	vector<double>	GetYAxis();
 	vector<double>	GetZAxis();
-
-	// 同步视图中vx/vy改变时
-	// 回调函数，用来改变当前视图
-	void			OnXAxisUpdated(vector<double>& v);
-	void			OnYAxisUpdated(vector<double>& v);
-	void			OnZAxisUpdated(vector<double>& v);
-
-	// 用于设置/获取十字光标位置
 	double			GetXPosition();
 	double			GetYPosition();
-	void			SetXPosition(double v);
-	void			SetYPosition(double v);
+	double			GetZPosition();
+	
+	// 用于设置十字光标位置
+	void			SetXYPosition(double x,double y);
 	
 	// 用于改变当前切片
-	double			GetZPosition();
 	void			SetZPosition(double v);
 
 	// 用于改变当前切片
-	void			UpdateVX(vector<double>& v);
-	void			UpdateVY(vector<double>& v);
-	vector<double>	GetVX();
-	vector<double>	GetVY();
+	void			SetXAxis(vector<double>& v);
+	void			SetYAxis(vector<double>& v);
 
+	void			SetNextViewer(lwMPRLogic2* viewer);
 private:
+	boost::signals2::signal<void(MPR_TYPE, vector<double>&)> vx_update_sig;
+	boost::signals2::signal<void(MPR_TYPE, vector<double>&)> vy_update_sig;
+	boost::signals2::signal<void(MPR_TYPE, double)> xpos_update_sig;
+	boost::signals2::signal<void(MPR_TYPE, double)> ypos_update_sig;
+	boost::signals2::signal<void(MPR_TYPE, double)> zpos_update_sig;
+
+	// 同步视图中vx/vy改变时
+	// 回调函数，用来改变当前视图
+	void			OnAxisChanged(MPR_TYPE view, vector<double>& vx, vector<double>& vy);
+	void			OnXPosUpdated(MPR_TYPE view, double pos);
+	void			OnYPosUpdated(MPR_TYPE view, double pos);
+	void			OnZPosUpdated(MPR_TYPE view, double pos);
+
+	lwMPRLogic2*	next_viewer;
+
 	// 当前十字交叉点位置
 	double	xpos{ 0 };
 	double	ypos{ 0 };
@@ -102,3 +120,6 @@ private:
 };
 
 #endif // !_LW_MPR_LOGIC2_H
+
+
+

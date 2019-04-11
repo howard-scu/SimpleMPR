@@ -19,21 +19,15 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="lwMPRImageInteractionCallback.cpp" />
-    <ClCompile Include="lwMPRImageViewer.cpp" />
-    <ClCompile Include="lwMPRImageViewer2.cpp" />
-    <ClCompile Include="lwMPRImageViewer_test.cpp" />
+    <ClCompile Include="lwMPRBase.cpp" />
+    <ClCompile Include="lwapi_test.cpp" />
     <ClCompile Include="lwMPRLogic.cpp" />
-    <ClCompile Include="lwMPRLogic2.cpp" />
-    <ClCompile Include="lwMPRLogic2_test.cpp" />
-    <ClCompile Include="lwMPRLogic_test.cpp" />
+    <ClCompile Include="lwUtils.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="lwMPRImageInteractionCallback.h" />
-    <ClInclude Include="lwMPRImageViewer.h" />
-    <ClInclude Include="lwMPRImageViewer2.h" />
+    <ClInclude Include="lwMPRBase.h" />
     <ClInclude Include="lwMPRLogic.h" />
-    <ClInclude Include="lwMPRLogic2.h" />
+    <ClInclude Include="lwUtils.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{13ea54d3-cb00-4ce5-852b-dfc0c8426289}</ProjectGuid>
@@ -90,7 +84,7 @@
     <LibraryPath>E:\mitk\build\ep\bin;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>E:\mitk\build\ep\include\vtk-7.0;E:\mitk\build\ep\include\ITK-4.9;E:\mitk\build\ep\include\gdcm-2.6;E:\Projects\SimpleMPR\SimpleMPR\include;$(IncludePath)</IncludePath>
+    <IncludePath>E:\mitk\build\ep\include\vtk-7.0;E:\mitk\build\ep\include\ITK-4.9;E:\mitk\build\ep\include\gdcm-2.6;E:\Projects\SimpleMPR\SimpleMPR\include;E:\boost_1_65_1;$(IncludePath)</IncludePath>
     <LibraryPath>E:\mitk\build\ep\bin;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

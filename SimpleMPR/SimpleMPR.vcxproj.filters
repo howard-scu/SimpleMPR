@@ -15,45 +15,27 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="lwMPRBase.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
     <ClCompile Include="lwMPRLogic.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="lwMPRLogic_test.cpp">
+    <ClCompile Include="lwUtils.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="lwMPRImageViewer.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="lwMPRImageViewer_test.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="lwMPRImageInteractionCallback.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="lwMPRLogic2.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="lwMPRLogic2_test.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="lwMPRImageViewer2.cpp">
+    <ClCompile Include="lwapi_test.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="lwMPRBase.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
     <ClInclude Include="lwMPRLogic.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="lwMPRImageViewer.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lwMPRImageInteractionCallback.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lwMPRLogic2.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="lwMPRImageViewer2.h">
+    <ClInclude Include="lwUtils.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
