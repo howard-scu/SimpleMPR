@@ -4,7 +4,7 @@
 
 lwMPRBase::lwMPRBase()
 {
-	axis = vtkSmartPointer<vtkMatrix4x4>::New();
+	Init();
 }
 
 
@@ -15,22 +15,16 @@ lwMPRBase::~lwMPRBase()
 void lwMPRBase::SetView(MPR_TYPE type)
 {
 	view = type;
-	switch (view)
+	switch (type)
 	{
 	case lwMPRBase::AXIAL:
-		axis->DeepCopy(AXIAL_VIEW);
-		hv = vector<double>{ 1,0,0 };
-		vv = vector<double>{ 0,1,0 };
+		view_mat->DeepCopy(AXIAL_VIEW);
 		break;
 	case lwMPRBase::CORONAL:
-		axis->DeepCopy(CORONAL_VIEW);
-		hv = vector<double>{ 1,0,0 };
-		vv = vector<double>{ 0,0,1 };
+		view_mat->DeepCopy(CORONAL_VIEW);
 		break;
 	case lwMPRBase::SAGITTAL:
-		axis->DeepCopy(SAGITTAL_VIEW);
-		hv = vector<double>{ 0,1,0 };
-		vv = vector<double>{ 0,0,1 };
+		view_mat->DeepCopy(SAGITTAL_VIEW);
 		break;
 	}
 }
@@ -41,238 +35,61 @@ lwMPRBase::GetView()
 	return view;
 }
 
-vector<double> lwMPRBase::GetXAxis()
+vtkSmartPointer<vtkMatrix4x4> lwMPRBase::GetTransfromMatrix()
 {
-	vector<double> result(3, 0.0);
-	for (int i = 0; i < 3; i++)
-	{
-		switch (view)
-		{
-		case lwMPRBase::AXIAL:
-			result[i] = axis->GetElement(i, 0);
-			break;
-		case lwMPRBase::CORONAL:
-			result[i] = axis->GetElement(i, 0);
-			break;
-		case lwMPRBase::SAGITTAL:
-			result[i] = axis->GetElement(i, 2);
-			break;
-		}
-	}
-	return result;
+	rotation_x_mat->Modified();
+	rotation_y_mat->Modified();
+	rotation_z_mat->Modified();
+	view_mat->Modified();
+	auto trans1 = vtkSmartPointer<vtkMatrix4x4>::New();
+	auto trans2 = vtkSmartPointer<vtkMatrix4x4>::New();
+	auto trans3 = vtkSmartPointer<vtkMatrix4x4>::New();
+	vtkMatrix4x4::Multiply4x4(rotation_z_mat, rotation_y_mat, trans1);
+	vtkMatrix4x4::Multiply4x4(rotation_x_mat, view_mat, trans2);
+	vtkMatrix4x4::Multiply4x4(trans1, trans2, trans3);
+	return trans3;
 }
 
-vector<double> lwMPRBase::GetYAxis()
+void lwMPRBase::Init()
 {
-	vector<double> result(3, 0.0);
-	for (int i = 0; i < 3; i++)
-	{
-		switch (view)
-		{
-		case lwMPRBase::AXIAL:
-			result[i] = axis->GetElement(i, 1);
-			break;
-		case lwMPRBase::CORONAL:
-			result[i] = axis->GetElement(i, 2);
-			break;
-		case lwMPRBase::SAGITTAL:
-			result[i] = axis->GetElement(i, 0);
-			break;
-		}
-	}
-	return result;
+	rotation_x_mat = vtkSmartPointer<vtkMatrix4x4>::New();
+	rotation_y_mat = vtkSmartPointer<vtkMatrix4x4>::New();
+	rotation_z_mat = vtkSmartPointer<vtkMatrix4x4>::New();
+	view_mat = vtkSmartPointer<vtkMatrix4x4>::New();
+
+	rotation_x_mat->Identity();
+	rotation_y_mat->Identity();
+	rotation_z_mat->Identity();
+	view_mat->Identity();
 }
 
-vector<double> lwMPRBase::GetZAxis()
+
+void lwMPRBase::SetAlpha(double a)
 {
-	vector<double> result(3, 0.0);
-	for (int i = 0; i < 3; i++)
-	{
-		switch (view)
-		{
-		case lwMPRBase::AXIAL:
-			result[i] = axis->GetElement(i, 2);
-			break;
-		case lwMPRBase::CORONAL:
-			result[i] = axis->GetElement(i, 1);
-			break;
-		case lwMPRBase::SAGITTAL:
-			result[i] = axis->GetElement(i, 1);
-			break;
-		}
-	}
-	return result;
+	alpha = a;
+	rotation_x_mat->SetElement(1, 1, cos(alpha));
+	rotation_x_mat->SetElement(2, 1, sin(alpha));
+	rotation_x_mat->SetElement(1, 2, -sin(alpha));
+	rotation_x_mat->SetElement(2, 2, cos(alpha));
+	rotation_x_mat->Modified();
 }
 
-vector<double> lwMPRBase::GetHoriVector()
+void lwMPRBase::SetBeta(double b)
 {
-	return hv;
+	beta = b;
+	rotation_y_mat->SetElement(0, 0, cos(beta));
+	rotation_y_mat->SetElement(2, 0, -sin(beta));
+	rotation_y_mat->SetElement(0, 2, sin(beta));
+	rotation_y_mat->SetElement(2, 2, cos(beta));
+	rotation_y_mat->Modified();
 }
 
-vector<double> lwMPRBase::GetVertVector()
+void lwMPRBase::SetGamma(double g)
 {
-	return vv;
-}
-
-void lwMPRBase::SetXAxis(vector<double>& v)
-{
-	for (int i = 0; i < 3; i++)
-	{
-		switch (view)
-		{
-		case lwMPRBase::AXIAL:
-			axis->SetElement(i, 0, v[i]);
-			break;
-		case lwMPRBase::CORONAL:
-			axis->SetElement(i, 0, v[i]);
-			break;
-		case lwMPRBase::SAGITTAL:
-			axis->SetElement(i, 2, v[i]);
-			break;
-		}
-	}
-}
-
-void lwMPRBase::SetYAxis(vector<double>& v)
-{
-	for (int i = 0; i < 3; i++)
-	{
-		switch (view)
-		{
-		case lwMPRBase::AXIAL:
-			axis->SetElement(i, 1, v[i]);
-			break;
-		case lwMPRBase::CORONAL:
-			axis->SetElement(i, 2, v[i]);
-			break;
-		case lwMPRBase::SAGITTAL:
-			axis->SetElement(i, 0, v[i]);
-			break;
-		}
-	}
-}
-
-void lwMPRBase::SetZAxis(vector<double>& v)
-{
-	for (int i = 0; i < 3; i++)
-	{
-		switch (view)
-		{
-		case lwMPRBase::AXIAL:
-			axis->SetElement(i, 2, v[i]);
-			break;
-		case lwMPRBase::CORONAL:
-			axis->SetElement(i, 1, v[i]);
-			break;
-		case lwMPRBase::SAGITTAL:
-			axis->SetElement(i, 1, v[i]);
-			break;
-		}
-	}
-}
-
-void lwMPRBase::SetHoriVector(vector<double>& v)
-{
-	hv = v;
-}
-
-void lwMPRBase::SetVertVector(vector<double>& v)
-{
-	vv = v;
-}
-
-double lwMPRBase::GetXPos()
-{
-	switch (view)
-	{
-	case lwMPRBase::AXIAL:
-		return xpos;
-		break;
-	case lwMPRBase::CORONAL:
-		return xpos;
-		break;
-	case lwMPRBase::SAGITTAL:
-		return axis->GetElement(2, 3);
-		break;
-	}
-}
-
-double lwMPRBase::GetYPos()
-{
-	switch (view)
-	{
-	case lwMPRBase::AXIAL:
-		return ypos;
-		break;
-	case lwMPRBase::CORONAL:
-		return axis->GetElement(2, 3);
-		break;
-	case lwMPRBase::SAGITTAL:
-		return xpos;
-		break;
-	}
-}
-
-double lwMPRBase::GetZPos()
-{
-	switch (view)
-	{
-	case lwMPRBase::AXIAL:
-		return axis->GetElement(2, 3);
-		break;
-	case lwMPRBase::CORONAL:
-		return ypos;
-		break;
-	case lwMPRBase::SAGITTAL:
-		return ypos;
-		break;
-	}
-}
-
-void lwMPRBase::SetXPos(double v)
-{
-	switch (view)
-	{
-	case lwMPRBase::AXIAL:
-		xpos = v;
-		break;
-	case lwMPRBase::CORONAL:
-		xpos = v;
-		break;
-	case lwMPRBase::SAGITTAL:
-		axis->SetElement(2, 3, v);
-		break;
-	}
-}
-
-void lwMPRBase::SetYPos(double v)
-{
-	switch (view)
-	{
-	case lwMPRBase::AXIAL:
-		ypos = v;
-		break;
-	case lwMPRBase::CORONAL:
-		axis->SetElement(2, 3, v);
-		break;
-	case lwMPRBase::SAGITTAL:
-		xpos = v;
-		break;
-	}
-}
-
-void lwMPRBase::SetZPos(double v)
-{
-	switch (view)
-	{
-	case lwMPRBase::AXIAL:
-		axis->SetElement(2, 3, v);
-		break;
-	case lwMPRBase::CORONAL:
-		ypos = v;
-		break;
-	case lwMPRBase::SAGITTAL:
-		ypos = v;
-		break;
-	}
+	gamma = g;
+	rotation_z_mat->SetElement(0, 0, cos(gamma));
+	rotation_z_mat->SetElement(1, 0, sin(gamma));
+	rotation_z_mat->SetElement(0, 1, -sin(gamma));
+	rotation_z_mat->SetElement(1, 1, cos(gamma));
+	rotation_z_mat->Modified();
 }

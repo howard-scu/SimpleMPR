@@ -10,6 +10,10 @@
 
 using namespace std;
 
+// ×ÔÓÉ¶È
+// x,y,z
+// alpha,belta,theta
+
 class lwMPRBase
 {
 public:
@@ -20,45 +24,46 @@ public:
 		AXIAL = 1,
 		CORONAL = 2,
 		SAGITTAL = 4,
-		OBLIQUE
+		//OBLIQUE
 	};
 
 	void			SetView(MPR_TYPE type);
 	MPR_TYPE		GetView();
 
-	vector<double>	GetXAxis();
-	vector<double>	GetYAxis();
-	vector<double>	GetZAxis();
+	double GetXPos() { return xpos; }
+	double GetYPos() { return ypos; }
+	double GetZPos() { return zpos; }
 
-	vector<double>	GetHoriVector();
-	vector<double>	GetVertVector();
+	void SetXPos(double mx) { xpos = mx; }
+	void SetYPos(double my) { ypos = my; }
+	void SetZPos(double mz) { zpos = mz; }
 
-	double			GetXPos();
-	double			GetYPos();
-	double			GetZPos();
+	double GetAlpha() { return alpha; }
+	double GetBeta()  { return beta; }
+	double GetGamma() { return gamma; }
 
-	//protected:
-	void			SetXAxis(vector<double>& v);
-	void			SetYAxis(vector<double>& v);
-	void			SetZAxis(vector<double>& v);
-
-	void			SetHoriVector(vector<double>& v);
-	void			SetVertVector(vector<double>& v);
-
-	void			SetXPos(double v);
-	void			SetYPos(double v);
-	void			SetZPos(double v);
-
+	void SetAlpha(double a);
+	void SetBeta(double b);
+	void SetGamma(double g);
+	
+	vtkSmartPointer<vtkMatrix4x4> GetTransfromMatrix();
 
 private:
-	vtkSmartPointer<vtkMatrix4x4>			axis;
+	void Init();
+	vtkSmartPointer<vtkMatrix4x4>			rotation_x_mat;
+	vtkSmartPointer<vtkMatrix4x4>			rotation_y_mat;
+	vtkSmartPointer<vtkMatrix4x4>			rotation_z_mat;
+	vtkSmartPointer<vtkMatrix4x4>			view_mat;
+
 	MPR_TYPE								view{ AXIAL };
+
 	double			xpos{ 0 };
 	double			ypos{ 0 };
 	double			zpos{ 0 };
 
-	vector<double>	hv{ 1,0,0 };
-	vector<double>	vv{ 0,1,0 };
+	double			alpha{ 0 };			// ÈÆzÖáÐý×ª½Ç
+	double			beta{ 0 };			// ÈÆyÖáÐý×ª½Ç
+	double			gamma{ 0 };			// ÈÆxÖáÐý×ª½Ç
 
 	const double AXIAL_VIEW[16] = {
 		1, 0, 0, 0,

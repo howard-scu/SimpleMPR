@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="demo.cpp" />
     <ClCompile Include="lwMPRBase.cpp" />
     <ClCompile Include="lwapi_test.cpp" />
     <ClCompile Include="lwMPRLogic.cpp" />
