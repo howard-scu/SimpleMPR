@@ -10,10 +10,6 @@
 
 using namespace std;
 
-// втси╤х
-// x,y,z
-// alpha,belta,theta
-
 class lwMPRBase
 {
 public:
