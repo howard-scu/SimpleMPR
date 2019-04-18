@@ -4,6 +4,7 @@
 #include "lwMPRBase.h"
 #include "lwUtils.h"
 #include "lwMPRLogic.h"
+#include "lwMPRViewer.h"
 
 #define PI 3.1415926
 
@@ -23,63 +24,118 @@ for(int i=0;i<4;i++)													\
 	CHECK(x->GetElement(i,j) == Approx(y[i*4+j]).margin(1e-5));}		\
 }while(0)
 
-TEST_CASE("lwMPRBase单元测试", "[single-file]")
+//TEST_CASE("lwMPRBase单元测试", "[single-file]")
+//{
+//	shared_ptr<lwMPRBase> base = make_shared<lwMPRBase>();
+//	SECTION("测试Get/Set")
+//	{
+//		base->SetView(lwMPRBase::AXIAL);
+//		CHECK(base->GetView() == lwMPRBase::AXIAL);
+//		base->SetView(lwMPRBase::CORONAL);
+//		CHECK(base->GetView() == lwMPRBase::CORONAL);
+//		base->SetView(lwMPRBase::SAGITTAL);
+//		CHECK(base->GetView() == lwMPRBase::SAGITTAL);
+//
+//		// 初始化
+//		CHECK(base->GetXPos() == Approx(0.0).epsilon(1e-5));
+//		CHECK(base->GetYPos() == Approx(0.0).epsilon(1e-5));
+//		CHECK(base->GetZPos() == Approx(0.0).epsilon(1e-5));
+//		CHECK(base->GetAlpha() == Approx(0.0).epsilon(1e-5));
+//		CHECK(base->GetBeta() == Approx(0.0).epsilon(1e-5));
+//		CHECK(base->GetGamma() == Approx(0.0).epsilon(1e-5));
+//
+//		// Get/Set
+//		base->SetXPos(1.2);
+//		base->SetYPos(11.2);
+//		base->SetZPos(-21.2);
+//		CHECK(base->GetXPos() == Approx(1.2).epsilon(1e-5));
+//		CHECK(base->GetYPos() == Approx(11.2).epsilon(1e-5));
+//		CHECK(base->GetZPos() == Approx(-21.2).epsilon(1e-5));
+//		base->SetAlpha(1.2);
+//		base->SetBeta(11.2);
+//		base->SetGamma(-21.2);
+//		CHECK(base->GetAlpha() == Approx(1.2).epsilon(1e-5));
+//		CHECK(base->GetBeta() == Approx(11.2).epsilon(1e-5));
+//		CHECK(base->GetGamma() == Approx(-21.2).epsilon(1e-5));
+//	}
+//	//SECTION("测试旋转角度")
+//	//{
+//	//	auto a = PI / 3;
+//	//	auto b = PI / 5;
+//	//	auto g = PI / 4;
+//	//	base->SetAlpha(a);
+//	//	base->SetBeta(b);
+//	//	base->SetGamma(g);
+//	//	auto trans = base->GetTransfromMatrix();
+//	//	vector<double> result = {
+//	//	cos(b)*cos(g),-cos(a)*sin(g) + sin(a)*sin(b)*cos(g),sin(a)*sin(g) + cos(a)*sin(b)*cos(g),0,
+//	//	cos(b)*sin(g),cos(a)*cos(g) + sin(a)*sin(b)*sin(g),-sin(a)*cos(g) + cos(a)*sin(b)*sin(g),0,
+//	//	-sin(b),sin(a)*cos(b),cos(a)*cos(b),0,
+//	//		0,0,0,1
+//	//	};
+//	//	CHECK_MAT_EQUAL(trans, result);
+//	//}
+//}
+
+
+//TEST_CASE("test vx/vy sync for lwMPRLogic", "[single-file]")
+//{
+//	shared_ptr<lwMPRLogic> viewer1 = make_shared<lwMPRLogic>();
+//	viewer1->SetView(lwMPRBase::AXIAL);
+//
+//	shared_ptr<lwMPRLogic> viewer2 = make_shared<lwMPRLogic>();
+//	viewer2->SetView(lwMPRBase::CORONAL);
+//
+//	shared_ptr<lwMPRLogic> viewer3 = make_shared<lwMPRLogic>();
+//	viewer3->SetView(lwMPRBase::SAGITTAL);
+//
+//	viewer1->SyncViewer(viewer2.get());
+//	viewer2->SyncViewer(viewer3.get());
+//	viewer3->SyncViewer(viewer1.get());
+//
+//	viewer1->UpdateTheta(PI / 2);
+//	viewer2->UpdateTheta(PI / 2);
+//	viewer2->UpdateTheta(PI / 2);
+//	viewer1->GetTransfromMatrix()->Print(cout);
+//	viewer2->GetTransfromMatrix()->Print(cout);
+//	viewer3->GetTransfromMatrix()->Print(cout);
+//}
+
+#include <vtkAutoInit.h>
+#include <vtkMetaImageReader.h>
+#include <vtkDICOMImageReader.h>
+
+VTK_MODULE_INIT(vtkRenderingVolumeOpenGL);
+VTK_MODULE_INIT(vtkRenderingOpenGL);
+VTK_MODULE_INIT(vtkInteractionStyle);
+VTK_MODULE_INIT(vtkRenderingFreeType)
+
+TEST_CASE("test vx/vy sync for lwMPRViewer", "[single-file]")
 {
-	shared_ptr<lwMPRBase> base = make_shared<lwMPRBase>();
-	SECTION("测试Get/Set")
-	{
-		base->SetView(lwMPRBase::AXIAL);
-		CHECK(base->GetView() == lwMPRBase::AXIAL);
-		base->SetView(lwMPRBase::CORONAL);
-		CHECK(base->GetView() == lwMPRBase::CORONAL);
-		base->SetView(lwMPRBase::SAGITTAL);
-		CHECK(base->GetView() == lwMPRBase::SAGITTAL);
+	auto reader = vtkSmartPointer<vtkDICOMImageReader>::New();
+	reader->SetDirectoryName("E:\\CarotidAnalyze\\VirtualEndoscopy\\data\\Head");
+	reader->Update();
 
-		// 初始化
-		CHECK(base->GetXPos() == Approx(0.0).epsilon(1e-5));
-		CHECK(base->GetYPos() == Approx(0.0).epsilon(1e-5));
-		CHECK(base->GetZPos() == Approx(0.0).epsilon(1e-5));
-		CHECK(base->GetAlpha() == Approx(0.0).epsilon(1e-5));
-		CHECK(base->GetBeta() == Approx(0.0).epsilon(1e-5));
-		CHECK(base->GetGamma() == Approx(0.0).epsilon(1e-5));
+	shared_ptr<lwMPRViewer> viewer1 = make_shared<lwMPRViewer>();
+	shared_ptr<lwMPRViewer> viewer2 = make_shared<lwMPRViewer>();
+	shared_ptr<lwMPRViewer> viewer3 = make_shared<lwMPRViewer>();
 
-		// Get/Set
-		base->SetXPos(1.2);
-		base->SetYPos(11.2);
-		base->SetZPos(-21.2);
-		CHECK(base->GetXPos() == Approx(1.2).epsilon(1e-5));
-		CHECK(base->GetYPos() == Approx(11.2).epsilon(1e-5));
-		CHECK(base->GetZPos() == Approx(-21.2).epsilon(1e-5));
-		base->SetAlpha(1.2);
-		base->SetBeta(11.2);
-		base->SetGamma(-21.2);
-		CHECK(base->GetAlpha() == Approx(1.2).epsilon(1e-5));
-		CHECK(base->GetBeta() == Approx(11.2).epsilon(1e-5));
-		CHECK(base->GetGamma() == Approx(-21.2).epsilon(1e-5));
-	}
-	SECTION("测试旋转角度")
-	{
-		auto a = PI / 3;
-		auto b = PI / 5;
-		auto g = PI / 4;
-		base->SetAlpha(a);
-		base->SetBeta(b);
-		base->SetGamma(g);
-		auto trans = base->GetTransfromMatrix();
-		vector<double> result = {
-		cos(b)*cos(g),-cos(a)*sin(g) + sin(a)*sin(b)*cos(g),sin(a)*sin(g) + cos(a)*sin(b)*cos(g),0,
-		cos(b)*sin(g),cos(a)*cos(g) + sin(a)*sin(b)*sin(g),-sin(a)*cos(g) + cos(a)*sin(b)*sin(g),0,
-		-sin(b),sin(a)*cos(b),cos(a)*cos(b),0,
-			0,0,0,1
-		};
-		CHECK_MAT_EQUAL(trans, result);
-	}
+	viewer1->SetView(lwMPRLogic::AXIAL);
+	viewer2->SetView(lwMPRLogic::CORONAL);
+	viewer3->SetView(lwMPRLogic::SAGITTAL);
+
+	viewer1->SyncViewer(viewer2.get());
+	viewer2->SyncViewer(viewer3.get());
+	viewer3->SyncViewer(viewer1.get());
+
+	viewer1->SetInput(reader->GetOutput());
+	viewer2->SetInput(reader->GetOutput());
+	viewer3->SetInput(reader->GetOutput());
+
+	viewer1->Render();
+	viewer2->Render();
+	viewer3->Render();
 }
-
-
-
-
-
 
 
 ////TEST_CASE("test for lwMPRBase", "[single-file]")

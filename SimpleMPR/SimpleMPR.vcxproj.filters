@@ -24,10 +24,13 @@
     <ClCompile Include="lwUtils.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="lwapi_test.cpp">
+    <ClCompile Include="lwMPRViewer.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="demo.cpp">
+    <ClCompile Include="lwMPRCallback.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -39,6 +42,12 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="lwUtils.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lwMPRViewer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lwMPRCallback.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

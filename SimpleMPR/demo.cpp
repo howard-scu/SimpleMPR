@@ -92,13 +92,74 @@
 //			vtkImageReslice *reslice = this->ImageReslice;
 //			reslice->Update();
 //			vtkMatrix4x4 *matrix = reslice->GetResliceAxes();
-//			theta += PI / 36;
+//			//theta += PI / 36;
+//			double center[3];
+//			center[0] = matrix->GetElement(0, 3);
+//			center[1] = matrix->GetElement(1, 3);
+//			center[2] = matrix->GetElement(2, 3);
 //
-//			matrix->SetElement(0, 0, cos(theta));
-//			matrix->SetElement(1, 0, -sin(theta));
-//			matrix->SetElement(0, 2, sin(theta));
-//			matrix->SetElement(1, 2, cos(theta));
+//			auto alpha = PI / 2;
+//			auto beta  = PI / 2;
+//			auto gamma = PI / 2;
 //
+//			auto tmp = vtkSmartPointer<vtkMatrix4x4>::New();
+//			auto res = vtkSmartPointer<vtkMatrix4x4>::New();
+//
+//			auto rotation_x_mat = vtkSmartPointer<vtkMatrix4x4>::New();
+//			auto rotation_y_mat = vtkSmartPointer<vtkMatrix4x4>::New();
+//			auto rotation_z_mat = vtkSmartPointer<vtkMatrix4x4>::New();
+//			rotation_x_mat->Identity();
+//			rotation_y_mat->Identity();
+//			rotation_z_mat->Identity();
+//			rotation_x_mat->SetElement(1, 1, cos(alpha));
+//			rotation_x_mat->SetElement(2, 1, sin(alpha));
+//			rotation_x_mat->SetElement(1, 2, -sin(alpha));
+//			rotation_x_mat->SetElement(2, 2, cos(alpha));
+//			rotation_y_mat->SetElement(0, 0, cos(beta));
+//			rotation_y_mat->SetElement(2, 0, -sin(beta));
+//			rotation_y_mat->SetElement(0, 2, sin(beta));
+//			rotation_y_mat->SetElement(2, 2, cos(beta));
+//			rotation_z_mat->SetElement(0, 0, cos(gamma));
+//			rotation_z_mat->SetElement(1, 0, sin(gamma));
+//			rotation_z_mat->SetElement(0, 1, -sin(gamma));
+//			rotation_z_mat->SetElement(1, 1, cos(gamma));
+//
+//			//rotation_x_mat->Transpose();
+//			//rotation_z_mat->Transpose();
+//			//rotation_y_mat->Transpose();
+//			res->DeepCopy(matrix);
+//			vtkMatrix4x4::Multiply4x4(res, rotation_z_mat, res);
+//			//vtkMatrix4x4::Multiply4x4(res, rotation_z_mat, res);
+//			//vtkMatrix4x4::Multiply4x4(res, rotation_y_mat, res);
+//			vtkMatrix4x4::Multiply4x4(res, rotation_y_mat, res);
+//
+//			//double array[] = { cos(theta),sin(theta),0,0,
+//			//	-sin(theta),cos(theta),0,0,
+//			//	0,0,1,0,
+//			//	0,0,0,1 };
+//
+//			//auto a = PI / 2;
+//			//auto b = PI / 2;
+//			//auto g = 0;
+//			//double result[] = {
+//			//cos(b)*cos(g),-cos(a)*sin(g) + sin(a)*sin(b)*cos(g),sin(a)*sin(g) + cos(a)*sin(b)*cos(g),0,
+//			//cos(b)*sin(g),cos(a)*cos(g) + sin(a)*sin(b)*sin(g),-sin(a)*cos(g) + cos(a)*sin(b)*sin(g),0,
+//			//-sin(b),sin(a)*cos(b),cos(a)*cos(b),0,
+//			//	0,0,0,1
+//			//};
+//
+//			//matrix->SetElement(0, 0, cos(theta));
+//			//matrix->SetElement(1, 0, -sin(theta));
+//			//matrix->SetElement(0, 1, sin(theta));
+//			//matrix->SetElement(1, 1, cos(theta));
+//			matrix->DeepCopy(res);
+//
+//			matrix->SetElement(0, 3, center[0]);
+//			matrix->SetElement(1, 3, center[1]);
+//			matrix->SetElement(2, 3, center[2]);
+//			matrix->Print(cout);
+//			reslice->SetResliceAxes(matrix);
+//			reslice->Update();
 //			interactor->Render();
 //			this->Slicing = 1;
 //		}
@@ -153,15 +214,15 @@
 //	vtkRenderWindowInteractor *Interactor;
 //};
 //
+//#include <vtkDICOMImageReader.h>
+//
 //// The program entry point
 //int main(int argc, char *argv[])
 //{
 //	// Start by loading some data.
-//	vtkSmartPointer<vtkMetaImageReader> reader =
-//		vtkSmartPointer<vtkMetaImageReader>::New();
-//	reader->SetFileName("c:\\0.mha");
+//	auto reader = vtkSmartPointer<vtkDICOMImageReader>::New();
+//	reader->SetDirectoryName("E:\\CarotidAnalyze\\VirtualEndoscopy\\data\\Head");
 //	reader->Update();
-//
 //	int extent[6];
 //	double spacing[3];
 //	double origin[3];
@@ -177,11 +238,11 @@
 //	center[2] = origin[2] + spacing[2] * 0.5 * (extent[4] + extent[5]);
 //
 //	// Matrices for axial, coronal, sagittal, oblique view orientations
-//	//static double axialElements[16] = {
-//	//         1, 0, 0, 0,
-//	//         0, 1, 0, 0,
-//	//         0, 0, 1, 0,
-//	//         0, 0, 0, 1 };
+//	static double axialElements[16] = {
+//			 1, 0, 0, 0,
+//			 0, 1, 0, 0,
+//			 0, 0, 1, 0,
+//			 0, 0, 0, 1 };
 //
 //	static double coronalElements[16] = {
 //			 1, 0, 0, 0,
@@ -189,11 +250,11 @@
 //			 0,-1, 0, 0,
 //			 0, 0, 0, 1 };
 //
-//	//static double sagittalElements[16] = {
-//	//	0, 0,-1, 0,
-//	//	1, 0, 0, 0,
-//	//	0,-1, 0, 0,
-//	//	0, 0, 0, 1 };
+//	static double sagittalElements[16] = {
+//		0, 0,1, 0,
+//		-1, 0, 0, 0,
+//		0,-1, 0, 0,
+//		0, 0, 0, 1 };
 //
 //	//static double obliqueElements[16] = {
 //	//         1, 0, 0, 0,
@@ -204,7 +265,7 @@
 //	// Set the slice orientation
 //	vtkSmartPointer<vtkMatrix4x4> resliceAxes =
 //		vtkSmartPointer<vtkMatrix4x4>::New();
-//	resliceAxes->DeepCopy(coronalElements);
+//	resliceAxes->DeepCopy(sagittalElements);
 //	// Set the point through which to slice
 //	resliceAxes->SetElement(0, 3, center[0]);
 //	resliceAxes->SetElement(1, 3, center[1]);

@@ -19,15 +19,18 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="demo.cpp" />
     <ClCompile Include="lwMPRBase.cpp" />
-    <ClCompile Include="lwapi_test.cpp" />
+    <ClCompile Include="lwMPRCallback.cpp" />
     <ClCompile Include="lwMPRLogic.cpp" />
+    <ClCompile Include="lwMPRViewer.cpp" />
     <ClCompile Include="lwUtils.cpp" />
+    <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="lwMPRBase.h" />
+    <ClInclude Include="lwMPRCallback.h" />
     <ClInclude Include="lwMPRLogic.h" />
+    <ClInclude Include="lwMPRViewer.h" />
     <ClInclude Include="lwUtils.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
