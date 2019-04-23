@@ -51,11 +51,14 @@ private:
 	
 	Ui::QtMprDemoClass ui;
 	vtkSmartPointer<vtkImageData>		input;
-	vtkSmartPointer<vtkMatrix4x4>		resliceAxes;
 	vtkSmartPointer<vtkImageReslice>	reslice;
 	vtkSmartPointer<vtkRenderer>		renderer;
 	vtkSmartPointer<vtkRenderWindow>	window;
 	vtkSmartPointer<vtkRenderWindowInteractor>	interactor;
+	
+	vtkSmartPointer<vtkMatrix4x4>		resliceAxes;
+	vtkSmartPointer<vtkMatrix4x4>		view;
+	vtkSmartPointer<vtkMatrix4x4>		axis;
 
 	void init();
 	bool is_init{ false };

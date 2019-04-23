@@ -36,14 +36,14 @@ void QtMprDemo::init()
 	change->GetOutput()->GetSpacing(spacing);
 	change->GetOutput()->GetExtent(extent);
 	change->GetOutput()->GetOrigin(origin);
-	
+
 	ui.x->setRange(extent[0], extent[1]);
 	ui.y->setRange(extent[2], extent[3]);
 	ui.z->setRange(extent[4], extent[5]);
 
-	ui.x->setValue(extent[1]/2);
-	ui.y->setValue(extent[3]/2);
-	ui.z->setValue(extent[5]/2);
+	ui.x->setValue(extent[1] / 2);
+	ui.y->setValue(extent[3] / 2);
+	ui.z->setValue(extent[5] / 2);
 
 	ui.ax->setRange(0, 36);
 	ui.ay->setRange(0, 36);
@@ -64,6 +64,12 @@ void QtMprDemo::init()
 	// Set the slice orientation
 	resliceAxes = vtkSmartPointer<vtkMatrix4x4>::New();
 	resliceAxes->DeepCopy(axialElements);
+
+	view = vtkSmartPointer<vtkMatrix4x4>::New();
+	view->DeepCopy(axialElements);
+
+	axis = vtkSmartPointer<vtkMatrix4x4>::New();
+	axis->DeepCopy(axialElements);
 
 	// Extract a slice in the desired orientation
 	reslice = vtkSmartPointer<vtkImageReslice>::New();
@@ -119,7 +125,9 @@ void QtMprDemo::on_btnA_clicked()
 	}
 	else
 	{
-		resliceAxes->DeepCopy(axialElements);
+		axis->DeepCopy(axialElements);
+		view->DeepCopy(axialElements);
+		vtkMatrix4x4::Multiply4x4(axis, view, resliceAxes);
 		resliceAxes->Modified();
 		interactor->Render();
 	}
@@ -134,7 +142,9 @@ void QtMprDemo::on_btnS_clicked()
 	}
 	else
 	{
-		resliceAxes->DeepCopy(sagittalElements);
+		axis->DeepCopy(axialElements);
+		view->DeepCopy(sagittalElements);
+		vtkMatrix4x4::Multiply4x4(axis, view, resliceAxes);
 		resliceAxes->Modified();
 		interactor->Render();
 	}
@@ -149,7 +159,9 @@ void QtMprDemo::on_btnC_clicked()
 	}
 	else
 	{
-		resliceAxes->DeepCopy(coronalElements);
+		axis->DeepCopy(axialElements);
+		view->DeepCopy(coronalElements);
+		vtkMatrix4x4::Multiply4x4(axis, view, resliceAxes);
 		resliceAxes->Modified();
 		interactor->Render();
 	}
@@ -202,6 +214,8 @@ void QtMprDemo::on_zpos_changed(int val)
 void QtMprDemo::on_axpos_changed(int val)
 {
 	a = PI / 18 * val;
+	cout << "Alpha = " << a << endl;
+
 	double array[] =
 	{
 	cos(b)*cos(g), -cos(a)*sin(g) + sin(a)*sin(b)*cos(g), sin(a)*sin(g) + cos(a)*sin(b)*cos(g), 0,
@@ -209,7 +223,9 @@ void QtMprDemo::on_axpos_changed(int val)
 		-sin(b), sin(a)*cos(b), cos(a)*cos(b), 0,
 		0, 0, 0, 1
 	};
-	resliceAxes->DeepCopy(array);
+
+	axis->DeepCopy(array);
+	vtkMatrix4x4::Multiply4x4(axis, view, resliceAxes);
 	resliceAxes->Modified();
 	interactor->Render();
 }
@@ -217,6 +233,8 @@ void QtMprDemo::on_axpos_changed(int val)
 void QtMprDemo::on_aypos_changed(int val)
 {
 	b = PI / 18 * val;
+	cout << "Beta  = " << b << endl;
+
 	double array[] =
 	{
 		cos(b)*cos(g), -cos(a)*sin(g) + sin(a)*sin(b)*cos(g), sin(a)*sin(g) + cos(a)*sin(b)*cos(g), 0,
@@ -224,7 +242,8 @@ void QtMprDemo::on_aypos_changed(int val)
 		-sin(b), sin(a)*cos(b), cos(a)*cos(b), 0,
 		0, 0, 0, 1
 	};
-	resliceAxes->DeepCopy(array);
+	axis->DeepCopy(array);
+	vtkMatrix4x4::Multiply4x4(axis, view, resliceAxes);
 	resliceAxes->Modified();
 	interactor->Render();
 }
@@ -232,6 +251,7 @@ void QtMprDemo::on_aypos_changed(int val)
 void QtMprDemo::on_azpos_changed(int val)
 {
 	g = PI / 18 * val;
+	cout << "Gamma  = " << g << endl;
 	double array[] =
 	{
 		cos(b)*cos(g), -cos(a)*sin(g) + sin(a)*sin(b)*cos(g), sin(a)*sin(g) + cos(a)*sin(b)*cos(g), 0,
@@ -239,7 +259,8 @@ void QtMprDemo::on_azpos_changed(int val)
 		-sin(b), sin(a)*cos(b), cos(a)*cos(b), 0,
 		0, 0, 0, 1
 	};
-	resliceAxes->DeepCopy(array);
+	axis->DeepCopy(array);
+	vtkMatrix4x4::Multiply4x4(axis, view, resliceAxes);
 	resliceAxes->Modified();
 	interactor->Render();
 }
