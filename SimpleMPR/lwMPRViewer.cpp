@@ -72,11 +72,15 @@ void lwMPRViewer::SetInput(vtkSmartPointer<vtkImageData> input)
 }
 
 
-void lwMPRViewer::Render()
+void lwMPRViewer::Render(double theta)
 {
 	reslice->SetResliceAxes(this->view_mat);
 	reslice->Update();
 	UpdateCursor();
+
+	renderer->ResetCamera();
+	//cout << renderer->GetActiveCamera()->GetRoll() << endl;
+	
 	window->Render();
 	if (!render_flag)
 	{

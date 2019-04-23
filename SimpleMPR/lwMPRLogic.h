@@ -30,7 +30,7 @@ public:
 	void	UpdatePosition(double x, double y);
 	void	SyncViewer(lwMPRLogic* viewer);
 	void	UpdateTheta(double theta);
-	virtual void Render() = 0;
+	virtual void Render(double theta = 0) = 0;
 private:
 	lwMPRLogic*		next;
 	boost::signals2::signal<void(MPR_TYPE, double)>		slice_signal;

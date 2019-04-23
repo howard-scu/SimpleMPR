@@ -18,18 +18,18 @@ void lwMPRLogic::SyncViewer(lwMPRLogic * viewer)
 
 void lwMPRLogic::UpdateTheta(double theta)
 {
-	switch (this->GetView())
-	{
-	case lwMPRBase::AXIAL:
-		this->SetGamma(theta);
-		break;
-	case lwMPRBase::CORONAL:
-		this->SetBeta(theta);
-		break;
-	case lwMPRBase::SAGITTAL:
-		this->SetAlpha(theta);
-		break;
-	}
+	//switch (this->GetView())
+	//{
+	//case lwMPRBase::AXIAL:
+	//	this->SetGamma(theta);
+	//	break;
+	//case lwMPRBase::CORONAL:
+	//	this->SetBeta(theta);
+	//	break;
+	//case lwMPRBase::SAGITTAL:
+	//	this->SetAlpha(theta);
+	//	break;
+	//}
 	if (next)
 	{
 		if (!theta_connection.connected())
@@ -68,7 +68,8 @@ void lwMPRLogic::theta_update_slot(MPR_TYPE view, double theta)
 			this->Render();
 		}
 	}
-	this->Render();
+	else
+		this->Render(theta);
 }
 
 
@@ -173,7 +174,8 @@ void lwMPRLogic::slice_update_slot(MPR_TYPE view, double nslice)
 			slice_signal(view, nslice);
 		}
 	}
-	this->Render();
+	else
+		this->Render();
 }
 
 void lwMPRLogic::position_update_slot(MPR_TYPE view, double x, double y)
@@ -206,6 +208,7 @@ void lwMPRLogic::position_update_slot(MPR_TYPE view, double x, double y)
 
 		}
 	}
-	this->Render();
+	else
+		this->Render();
 }
 

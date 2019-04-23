@@ -31,12 +31,11 @@ public:
 
 	void SetInput(vtkSmartPointer<vtkImageData> input);
 	vtkSmartPointer<vtkImageData> GetInput() {return image;}
-	void Render();
-	void UpdateCursor();
+	void Render(double theta = 0);
 
 private:
 	void InitCursor();
-	//void UpdateCursor();
+	void UpdateCursor();
 
 	vtkSmartPointer<vtkImageData>			image;
 	vtkSmartPointer<vtkMatrix4x4>			resliceAxes;

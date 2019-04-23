@@ -29,6 +29,9 @@ void lwMPRCallback::Execute(vtkObject * caller, unsigned long eventId, void * ca
 			0.0, renderer);
 		vflag = _vert_picker->Pick(iren->GetEventPosition()[0], iren->GetEventPosition()[1],
 			0.0, renderer);
+
+		// Ðý×ª
+		viewer->UpdateTheta(PI/2);
 		break;
 	case vtkCommand::LeftButtonReleaseEvent:
 		lp = false;
