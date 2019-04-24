@@ -11,4 +11,5 @@ SimpleMPR.sdf
 /SimpleMPR/x64/*
 /SimpleMPR/TOF3D1/*
 /QtMprDemo/Debug/*
-/QtMprDemo/x64/*
+/QtMprDemo/x64/Debug/*
+/QtMprDemo/GeneratedFiles/*

@@ -44,6 +44,11 @@ public slots:
 	void on_azpos_changed(int);
 	void on_slice_changed(int);
 
+
+	void on_rx_btn_clicked();
+	void on_ry_btn_clicked();
+	void on_rz_btn_clicked();
+
 private:
 	double	spacing[3];
 	double	origin[3];
@@ -59,6 +64,7 @@ private:
 	vtkSmartPointer<vtkMatrix4x4>		resliceAxes;
 	vtkSmartPointer<vtkMatrix4x4>		view;
 	vtkSmartPointer<vtkMatrix4x4>		axis;
+	vtkSmartPointer<vtkMatrix4x4>		trans;
 
 	void init();
 	bool is_init{ false };

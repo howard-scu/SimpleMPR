@@ -9,6 +9,7 @@ QtMprDemo::QtMprDemo(QWidget *parent)
 	: QMainWindow(parent)
 {
 	ui.setupUi(this);
+
 }
 
 QtMprDemo::~QtMprDemo()
@@ -70,6 +71,9 @@ void QtMprDemo::init()
 
 	axis = vtkSmartPointer<vtkMatrix4x4>::New();
 	axis->DeepCopy(axialElements);
+
+	trans = vtkSmartPointer<vtkMatrix4x4>::New();
+	trans->DeepCopy(axialElements);
 
 	// Extract a slice in the desired orientation
 	reslice = vtkSmartPointer<vtkImageReslice>::New();
@@ -183,6 +187,53 @@ void QtMprDemo::on_slice_changed(int val)
 	interactor->Render();
 }
 
+void QtMprDemo::on_rx_btn_clicked()
+{
+	double t = ui.rx_val->text().toInt() / 180.0 * PI;
+	double array[] = {
+		1,0,0,0,
+		0,cos(t),-sin(t),0,
+		0,sin(t),cos(t),0,
+		0,0,0,1
+	};
+	trans->DeepCopy(array);
+	vtkMatrix4x4::Multiply4x4(axis, trans, axis);
+	vtkMatrix4x4::Multiply4x4(axis, view, resliceAxes);
+	resliceAxes->Modified();
+	interactor->Render();
+}
+
+void QtMprDemo::on_ry_btn_clicked()
+{
+	double t = ui.ry_val->text().toInt() / 180.0 * PI;
+	double array[] = {
+		cos(t),0,sin(t),0,
+		0,1,0,0,
+		-sin(t),0,cos(t),0,
+		0,0,0,1
+	};
+	trans->DeepCopy(array);
+	vtkMatrix4x4::Multiply4x4(axis, trans, axis);
+	vtkMatrix4x4::Multiply4x4(axis, view, resliceAxes);
+	resliceAxes->Modified();
+	interactor->Render();
+}
+
+void QtMprDemo::on_rz_btn_clicked()
+{
+	double t = ui.rz_val->text().toInt() / 180.0 * PI;
+	double array[] = {
+		cos(t),-sin(t),0,0,
+		sin(t),cos(t),0,0,
+		0,0,1,0,
+		0,0,0,1
+	};
+	trans->DeepCopy(array);
+	vtkMatrix4x4::Multiply4x4(axis, trans, axis);
+	vtkMatrix4x4::Multiply4x4(axis, view, resliceAxes);
+	resliceAxes->Modified();
+	interactor->Render();
+}
 
 void QtMprDemo::on_xpos_changed(int val)
 {
