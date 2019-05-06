@@ -13,3 +13,6 @@ SimpleMPR.sdf
 /QtMprDemo/Debug/*
 /QtMprDemo/x64/Debug/*
 /QtMprDemo/GeneratedFiles/*
+/QtMipDemo/Debug/*
+/QtMipDemo/x64/Debug/*
+/QtMipDemo/GeneratedFiles/*

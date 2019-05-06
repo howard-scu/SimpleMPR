@@ -1,4 +1,4 @@
-#include "qtmprdemo.h"
+#include "qtmipdemo.h"
 #include <QtWidgets/QApplication>
 #include <vtkAutoInit.h>
 
@@ -10,7 +10,7 @@ VTK_MODULE_INIT(vtkRenderingFreeType)
 int main(int argc, char *argv[])
 {
 	QApplication a(argc, argv);
-	QtMprDemo w;
+	QtMipDemo w;
 	w.show();
 	return a.exec();
 }
