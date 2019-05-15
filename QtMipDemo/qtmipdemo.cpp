@@ -20,13 +20,14 @@ QtMipDemo::QtMipDemo(QWidget *parent)
 	
 	mapper = vtkSmartPointer<vtkSmartVolumeMapper>::New();
 	mapper->SetInputConnection(reader->GetOutputPort());
+	mapper->SetRequestedRenderModeToGPU();
 
 	property = vtkSmartPointer<vtkVolumeProperty>::New();
 	//property->SetIndependentComponents(independentComponents);
 	property->SetColor(color);
 	property->SetScalarOpacity(opacity);
 	property->SetInterpolationTypeToLinear();
-
+	
 	volume = vtkSmartPointer<vtkVolume>::New();
 	volume->SetProperty(property);
 	volume->SetMapper(mapper);
@@ -36,11 +37,11 @@ QtMipDemo::QtMipDemo(QWidget *parent)
 
 	ui.window->setValue(1000);
 	ui.window->setMinimum(0);
-	ui.window->setMaximum(1500);
+	ui.window->setMaximum(4096);
 
 	ui.level->setValue(600);
 	ui.level->setMinimum(0);
-	ui.level->setMaximum(1000);
+	ui.level->setMaximum(4096);
 
 	connect(ui.window, SIGNAL(valueChanged(int)), this, SLOT(on_window_changed(int)));
 	connect(ui.level, SIGNAL(valueChanged(int)), this, SLOT(on_level_changed(int)));
@@ -49,7 +50,6 @@ QtMipDemo::QtMipDemo(QWidget *parent)
 	opacity->AddSegment(ui.level->value() - 0.5 * ui.window->value(), 0.0, 
 		ui.level->value() + 0.5 * ui.window->value(), 1.0);
 	mapper->SetBlendModeToMaximumIntensity();
-
 }
 
 QtMipDemo::~QtMipDemo()

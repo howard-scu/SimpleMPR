@@ -1,3 +1,7 @@
-﻿  qtmprdemo.cpp
+﻿  Uic'ing qtmprdemo.ui...
+  moc_qtmprdemo.cpp
+  main.cpp
+  qtmprdemo.cpp
+  正在生成代码...
   QtMprDemo.vcxproj -> E:\Projects\SimpleMPR\x64\Debug\QtMprDemo.exe
   QtMprDemo.vcxproj -> E:\Projects\SimpleMPR\x64\Debug\QtMprDemo.pdb (Full PDB)
